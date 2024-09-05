@@ -1,4 +1,20 @@
-As a non-signed in user, when i go to ./* I should see the login page
+USER TYPES
+non-signed-in
+creative-music
+creative-graphics
+creative-videos
+venue-studio
+venue-events
+
+
+NON-SIGNED-IN
+As a non-signed-in user, when i go to ./* I should see the login page
+As a non-signed-in user, when i go to ./* I should be able to login
+As a non-signed-in user, when i go to ./* I should be able to create a new account
+
+CREATIVE-MUSIC
+As a creative-music user, when i go to ./dashboard I should be able to see my content portfolio
+As a creative-music user, when i go to ./dashboard I should be able to see users I've recently chatted with
 
 
 
