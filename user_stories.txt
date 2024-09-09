@@ -17,5 +17,13 @@ As a creative user, when i go to ./profile I should be able to view my bio
 As a creative user, when i go to ./profile I should be able to edit my bio
 As a creative user, when i go to ./profile I should be able to view my public portfolio
 
+Login Page:
+	When the user enters their information and clicks "login" it will log them into their account and put them on the home page
+	When the user clicks on signup, the signup page will replace the login page
+
+Sign up Page:
+	When the user enters their information and clicks "sign up" they will be taken to their new profile/account
+	
+
 VENUE 
 
