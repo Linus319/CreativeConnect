@@ -1,0 +1,6 @@
+Technologies
+- React
+- sqlite3
+- bootstrap
+- Azure (?)
+- 
