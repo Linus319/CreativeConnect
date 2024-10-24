@@ -5,11 +5,19 @@ export async function Images() {
 
   const { data: images } = await supabase.from("images").select();
 
-	const image_list = images?.map(img => <div className="flex-auto"><a href={img.url}><img src={img.url} className="rounded-lg"/></a></div>);
-
-	return (
+  if (images != null) {
+    const image_list = images?.map(img => <div className="flex-auto"><a href={img.url}><img src={img.url} className="rounded-lg"/></a></div>);
+    return (
+      <div className="grid grid-cols-4 m-5 gap-4">
+        {image_list}
+      </div>
+    );
+  }
+	
+	
+  return (
 		<div className="grid grid-cols-4 m-5 gap-4">
-      {image_list}
+      ERROR
     </div>
   );
 }
