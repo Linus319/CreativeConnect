@@ -8,11 +8,22 @@ import { redirect } from "next/navigation";
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const displayName = formData.get("display-name")?.toString();
+  const userType = formData.get("user-type")?.toString();
+  const subTypesString = formData.get("sub-type")?.toString();
+
+  let subTypes;
+  try {
+    subTypes = JSON.parse(subTypesString || "[]");
+  } catch (error) {
+    console.error("Failed to parse sub types:", error);
+  }
+
   const supabase = createClient();
   const origin = headers().get("origin");
 
-  if (!email || !password) {
-    return { error: "Email and password are required" };
+  if (!email || !password || !displayName || !userType || !subTypes) {
+    return { error: "All fields are required" };
   }
 
   const { error } = await supabase.auth.signUp({
@@ -27,12 +38,26 @@ export const signUpAction = async (formData: FormData) => {
     console.error(error.code + " " + error.message);
     return encodedRedirect("error", "/sign-up", error.message);
   } else {
+
+    const { error } = await supabase.from('users').insert({
+      email: email, 
+      display_name: displayName,
+      user_type: userType,
+      sub_types: subTypes
+    });
+
+    if (error) {
+      console.error(error.code + " " + error.message);
+      return encodedRedirect("error", "/sign-up", error.message);
+    }
+
     return encodedRedirect(
       "success",
       "/sign-up",
       "Thanks for signing up! Please check your email for a verification link.",
     );
   }
+
 };
 
 export const signInAction = async (formData: FormData) => {
