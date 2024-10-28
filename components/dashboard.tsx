@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { deleteItem } from '@/lib/actions';
 
-function DeleteButton({ id, view }: { id: string, view: bool }) {
+function DeleteButton({ id }: { id: string}) {
 
   const deleteWithId = deleteItem.bind(null, id);
 

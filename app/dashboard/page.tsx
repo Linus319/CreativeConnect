@@ -38,7 +38,7 @@ export default async function Dashboard() {
             <Images deleteMode="false"/>
           </div>
           <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl overflow-x-scroll ">
-            <Messages deleteMode="false"/>
+            <Messages />
           </div>
         </div>
 
