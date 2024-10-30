@@ -5,10 +5,10 @@ import { useState } from 'react';
 export default async function Dashboard() {
   return (
     <>
-      <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-4/5 max-w-screen-2xl">
+      <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
 
-        <div className="flex justify-center flex-col max-w-screen-md space-y-10 basis-7/12 bg-stone-600">
-          <div className="bg-rose-600 h-5/6 rounded-3xl overflow-y-auto">
+        <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
+          <div className="bg-rose-600 h-5/6 rounded-3xl ">
 
             <div id="action_bar" className="flex flex-row rounded-full mt-3">
               <div className="flex justify-start w-1/2">
@@ -37,7 +37,7 @@ export default async function Dashboard() {
             </div>
             <Images deleteMode="false"/>
           </div>
-          <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl overflow-x-scroll ">
+          <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl">
             <Messages />
           </div>
         </div>

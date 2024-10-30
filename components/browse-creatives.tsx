@@ -10,7 +10,7 @@ export default async function UserList() {
   const userList = profiles?.map(pf => {
                                  return pf.profile_image == null ? 
                                   <div className="flex flex-row">
-                                    <img key={pf.id} className="size-32 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
+                                    <img key={pf.id} className="size-20 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
                                     <div className="flex flex-col">
                                       <p>{pf.display_name}</p>
                                       {pf.sub_types?.map(entry => <p>{entry}</p>)}
@@ -19,7 +19,7 @@ export default async function UserList() {
                                   </div>
                                      : 
                                   <div className="flex flex-row">
-                                    <img key={pf.id} className="size-32 m-3 rounded-full" src={pf.profile_image} /> 
+                                    <img key={pf.id} className="size-20 m-3 rounded-full" src={pf.profile_image} /> 
                                     <div className="flex flex-col">
                                       <p>{pf.display_name}</p>
                                       {pf.sub_types?.map(entry => <p>{entry}</p>)}
@@ -28,7 +28,7 @@ export default async function UserList() {
   });
 
   return (
-    <div>
+    <div className="overflow-y-auto h-4/5">
       {userList} 
     </div>
 
