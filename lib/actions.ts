@@ -34,10 +34,11 @@ export async function deleteItem(id: string) {
 export async function selectUsers(formData: FormData) {
 
   const supabase = createClient();
-  const selectArray: string[] = ["Music"];
 
-//const { data: userList, error: error } = await supabase.from("users").select().filter('sub_types', 'cs', '["Music"]');
-  const { data: userList, error: error } = await supabase.from("users").select().overlaps('sub_types', ["Music"]);
+//const { data: userList, error: error } = await supabase.from("users").select().contains('temp_sub_types',["Music"]);
+  const filter = Array.from(formData.keys());
+  const { data: userList} = await supabase.from("users").select().overlaps('sub_types',filter);
+
+  console.log(filter);
   console.log(userList);
-  console.log(error);
 }

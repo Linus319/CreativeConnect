@@ -28,7 +28,7 @@ export async function Images({ deleteMode }: { deleteMode: string } ) {
                                 </div>);
 
   return (
-    <div className="grid grid-cols-4 m-5 gap-4 overflow-y-auto">
+    <div className="grid grid-cols-4 m-5 gap-4">
       {image_list}
     </div>
   );

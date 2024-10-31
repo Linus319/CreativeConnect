@@ -10,7 +10,7 @@ export default async function Dashboard() {
         <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
           <div className="bg-rose-600 h-5/6 rounded-3xl ">
 
-            <div id="action_bar" className="flex flex-row rounded-full mt-3">
+            <div id="action_bar" className="flex flex-row rounded-full">
               <div className="flex justify-start w-1/2">
                 <div className="py-2 pl-4 max-5">
                   Filter: 
@@ -35,14 +35,14 @@ export default async function Dashboard() {
                  </Link>
               </div>
             </div>
-            <Images deleteMode="false"/>
+            <Images deleteMode="false" className="overflow-y-auto"/>
           </div>
           <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl">
             <Messages />
           </div>
         </div>
 
-        <div className="flex justify-center flex-col max-w-screen-md space-y-10 basis-5/12 bg-zinc-600">
+        <div className="flex justify-center flex-col max-w-screen-md basis-5/12 bg-zinc-600">
           <div className="bg-violet-600 h-1/2 rounded-3xl">Appointments</div>
           <div className="bg-emerald-600 h-1/2 rounded-3xl">Calender</div>
         </div>
