@@ -30,3 +30,14 @@ export async function deleteItem(id: string) {
 
   revalidatePath('/dashboard');
 }
+
+export async function selectUsers(formData: FormData) {
+
+  const supabase = createClient();
+  const selectArray: string[] = ["Music"];
+
+//const { data: userList, error: error } = await supabase.from("users").select().filter('sub_types', 'cs', '["Music"]');
+  const { data: userList, error: error } = await supabase.from("users").select().overlaps('sub_types', ["Music"]);
+  console.log(userList);
+  console.log(error);
+}

@@ -28,7 +28,7 @@ export async function Images({ deleteMode }: { deleteMode: string } ) {
                                 </div>);
 
   return (
-    <div className="grid grid-cols-4 m-5 gap-4">
+    <div className="grid grid-cols-4 m-5 gap-4 overflow-y-auto">
       {image_list}
     </div>
   );
@@ -40,10 +40,21 @@ export async function Messages() {
   const { data: users } = await supabase.from("users").select();
   const image = "https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png"
 
-  const usersList = users?.map(user => <div className="flex-auto">
-                                          <img src={image} className="rounded-full max-w-20"/>
+  const usersList = users?.map(user => {
+  
+                                return user.profile_image == null ? 
+                                        <div className="flex-auto">
+                                          <img src={image} className="rounded-full max-w-10"/>
                                           <div className="flex justify-center" > {user.display_name} </div>
-                                        </div>);
+                                        </div>
+                                        :  
+                                        <div className="flex-auto">
+                                          <img src={user.profile_image} className="rounded-full max-w-10"/>
+                                          <div className="flex justify-center" > {user.display_name} </div>
+                                        </div>
+  }
+                                      );
+
   return (
     <div className="flex flex-row m-5 gap-4">
       {usersList}

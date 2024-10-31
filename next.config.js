@@ -8,7 +8,13 @@ const nextConfig = {
                 search: '',
             },
         ],
+        
     },
+    // experimental: {
+    //     serverActions: {
+    //       allowedOrigins: ["gloomy-broomstick-979jg9j7r4p395gj-3000.app.github.dev", "localhost:3000"]
+    //     }
+    //   },
 };
 
 module.exports = nextConfig;
