@@ -13,7 +13,7 @@ export default async function UserList() {
                                     <img key={pf.id} className="size-20 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
                                     <div className="flex flex-col">
                                       <p>{pf.display_name}</p>
-                                      {pf.sub_types?.map(entry => <p>{entry}</p>)}
+                                      {pf.sub_types?.map((entry: string) => <p>{entry}</p>)}
                                     </div>
 
                                   </div>
@@ -22,7 +22,7 @@ export default async function UserList() {
                                     <img key={pf.id} className="size-20 m-3 rounded-full" src={pf.profile_image} /> 
                                     <div className="flex flex-col">
                                       <p>{pf.display_name}</p>
-                                      {pf.sub_types?.map(entry => <p>{entry}</p>)}
+                                      {pf.sub_types?.map((entry: string) => <p>{entry}</p>)}
                                     </div>
                                   </div>
   });
