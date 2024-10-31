@@ -33,7 +33,9 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    formData.append("sub-type", JSON.stringify(selectedSubTypes));
+    for (let s of selectedSubTypes) {
+      formData.append("sub-types", s);
+    }
 
     await signUpAction(formData);
   };
