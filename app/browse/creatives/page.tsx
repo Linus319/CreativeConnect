@@ -7,7 +7,7 @@ export default function FindCreatives() {
   return (
     <div className="flex flex-row max-w-screen-2xl w-5/6 h-4/5">
       <div id="selector" className="bg-blue-900 max-w-screen-md basis-1/2">
-        <form action={selectUsers} className="flex flex-row justify-around bg-green-500">
+        <form action={selectUsers} className="flex flex-row h-10 justify-around bg-green-500 w-">
           <label>Select Creative Type</label>
           <div>
             <input id="Music" name="Music" type="checkbox" defaultChecked/>

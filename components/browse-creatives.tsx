@@ -28,7 +28,7 @@ export default async function UserList() {
   });
 
   return (
-    <div className="overflow-y-auto h-4/5">
+    <div className="overflow-y-auto h-full">
       {userList} 
     </div>
 
