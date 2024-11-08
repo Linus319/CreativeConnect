@@ -6,7 +6,7 @@ function DeleteButton({ id }: { id: string}) {
   const deleteWithId = deleteItem.bind(null, id);
 
   return (
-    <form >
+    <form action={deleteWithId}>
       <button type="submit" className="flex items-center justify-center absolute -right-3 -top-3 bg-gray-700 rounded-full size-8">X</button>
     </form> 
   );
