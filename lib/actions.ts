@@ -11,8 +11,8 @@ export async function uploadImage(formData: FormData) {
 
   const user = await supabase.auth.getUser();
 
-  const file: File = formData.get('file');
-  const title = user.data.user.email.split("@")[0] + Date.now();
+  const file: File | any = formData.get('file');
+  const title = user?.data?.user?.email?.split("@")[0] + Date.now();
 
   const { data: dataStorage, error: errorStorage } =  await supabase.storage.from('images').upload(title, file);
   const { data: url } = await supabase.storage.from('images').getPublicUrl(title);
@@ -21,7 +21,6 @@ export async function uploadImage(formData: FormData) {
                                                                             is_song_artwork: 'false',
                                                                             caption: formData.get('caption')
   });
-
   revalidatePath('/dashboard');
   redirect('/dashboard');
 }

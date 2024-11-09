@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { selectUsers } from '@/lib/actions';
 
 export default function FindCreatives() {
-  const [userList, setUserList] = useState();
-  const [userPreview, setUserPreview] = useState();
+  const [userList, setUserList] = useState(<></>);
+  const [userPreview, setUserPreview] = useState(<></>);
 
   //renders on first pass list of all users
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function FindCreatives() {
     .then((res) => res.json())
     .then((data) => { setUserList(UserList(data, setUserPreview)) })
 
-    setUserPreview(UserProfile());
+    setUserPreview(UserProfile(undefined));
   }, []);
 
   //makes a fetch request with the filters applied
@@ -60,9 +60,9 @@ export default function FindCreatives() {
   );
 }
 
-function UserList(users: any, setUserPreview) {
+function UserList(users: any, setUserPreview: any) {
 
-  function getOne(e) {
+  function getOne(e: any) {
 
     let formData = new FormData();
     formData.append("email", e.currentTarget.id);
@@ -72,13 +72,13 @@ function UserList(users: any, setUserPreview) {
 
   }
   
-  const list = users.data.map(pf => {
+  const list = users.data.map((pf: any) => {
                               return pf.profile_image == null ?
                                 <button onClick={getOne} key={pf.email} id={pf.email}className="flex flex-row">
                                   <img className="size-20 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
                                   <div className="flex flex-col">
                                     <p>{pf.display_name}</p>
-                                    {pf.sub_types?.map((entry, index) => <p key={index}>{entry}</p>)}
+                                    {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
                                   </div>
                                 </button>
                                 :
@@ -87,7 +87,7 @@ function UserList(users: any, setUserPreview) {
                                   <img className="size-20 m-3 rounded-full" src={pf.profile_image} />
                                   <div className="flex flex-col">
                                     <p>{pf.display_name}</p>
-                                    {pf.sub_types?.map((entry, index) => <p key={index}>{entry}</p>)}
+                                    {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
                                   </div>
                                 </button>
 
