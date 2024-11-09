@@ -10,14 +10,7 @@ export const signUpAction = async (formData: FormData) => {
   const password = formData.get("password")?.toString();
   const displayName = formData.get("display-name")?.toString();
   const userType = formData.get("user-type")?.toString();
-  const subTypesString = formData.get("sub-type")?.toString();
-
-  let subTypes;
-  try {
-    subTypes = JSON.parse(subTypesString || "[]");
-  } catch (error) {
-    console.error("Failed to parse sub types:", error);
-  }
+  const subTypes = formData.get("sub-types");
 
   const supabase = createClient();
   const origin = headers().get("origin");
@@ -43,7 +36,7 @@ export const signUpAction = async (formData: FormData) => {
       email: email, 
       display_name: displayName,
       user_type: userType,
-      sub_types: subTypes
+      sub_types: formData.getAll("sub-types")
     });
 
     if (error) {
