@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function ProfilePage() {
     const supabase = createClient();
@@ -26,6 +27,16 @@ export default async function ProfilePage() {
         <>
             <div className="grid grid-cols-4 grid-rows-12 bg-gray-600 w-5/6">
                 <div className="grid row-span-12 col-start-1 bg-purple-600 m-4 rounded">
+                    <div>
+                        <Link className="text-primary font-medium underline" href="/profile/edit">
+                            <Image 
+                                src={"/images/edit-button.svg"} 
+                                alt={"Edit profile button"} 
+                                width = {30}
+                                height = {30}
+                            />
+                        </Link>
+                    </div>
                     <div className="row-span-1 bg-gray-500 mt-4 mx-4 rounded">{user_info.display_name}</div>
                     <div className="row-span-3 bg-gray-500 mt-4 mx-4 rounded-full overflow-hidden w-2/3 h-2/3">
                         <Image

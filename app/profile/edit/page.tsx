@@ -1,98 +1,114 @@
+"use client"
+
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Box, TextArea } from 'native-base';
+import SubTypeMenu from "@/components/subtype-menu"
+import { useState, useEffect } from "react";
 
-
-export default async function ProfilePage() {
+export default async function EditProfilePage() {
     const supabase = createClient();
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+    const [user, setUser] = useState<any>(null);
+    const [userInfo, setUserInfo] = useState<any>(null);
+    const [subTypes, setSubTypes] = useState<string[]>([]);
+    const [userType, setUserType] = useState<string>("");
 
-    if (!user) {
-        return redirect('/sign-in');
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+            if (userError) {
+                console.error("Error fetching user:", userError);
+                return redirect('/sign-in');
+            }
+
+            setUser(user);
+
+            const { data, error } = await supabase.from("users").select("*").eq("email", user.email);
+
+            if (error) {
+                console.error("Error fetching user profile:", error);
+                return <div>Couldn't retrieve user profile</div>
+            }
+
+            const user_info = data[0];
+            setUserInfo(user_info);
+            setSubTypes(user_info.sub_types || []);
+            setUserType(user_info.user_type);
+        };
+
+        fetchUserData();
+    }, [supabase]);
+
+    const handleSubTypeChange = (newSelectedSubTypes: string[]) => {
+        setSubTypes(newSelectedSubTypes);
     }
 
-    const { data, error } = await supabase.from("users").select('*').eq('email', user.email);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-    if (error) {
-        console.error('Error fetching user:', error);
-        return <div>Couldn't retrieve user profile</div>;
+        // // Update the user's profile with the new subtypes
+        // const { error } = await supabase.from('users')
+        //     .update({ sub_types: subTypes })
+        //     .eq('email', user.email);
+
+        // if (error) {
+        //     console.error('Error updating user profile:', error);
+        // } else {
+        //     console.log('User profile updated successfully');
+        //     // Redirect or show success message
+        // }
+    };
+
+    if (!user || !userInfo) {
+        return <div>Loading...</div>;
     }
-
-    const user_info = data[0];
-    const sub_types = user_info.sub_types;
-    const if_submitted: boolean = false; // FIX THIS WITH USE STATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
 
     return (
         <>
-            <div className="grid grid-cols-4 grid-rows-12 bg-gray-600 w-5/6">
-                <div>
-                    <Link className="text-primary font-medium underline" href="/profile">
-                        <Image 
-                            src={if_submitted ? "/images/edit-profile-success.svg" : "/images/edit-profile-button.svg"} 
-                            alt={if_submitted ? "Profile updated successfully!" : "Error updating profile, please try again later."} 
-                            width = {30}
-                            height = {30}
-                        />
-                    </Link>
-                    <div>Temporary edit profile button</div>
-                </div>
-             
-
-
-                
-                <div className="grid row-span-12 col-start-1 bg-purple-600 m-4 rounded">
-                    
-                    <div className="row-span-1 row-start-1 bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
-                        <Label htmlFor='display-name'>Display name</Label>
-                        <Input name="display-name" placeholder={user_info.display_name} />
-                       
-                    </div>
-                    
-                    <div className="row-start-2 row-span-2 bg-gray-500 mt-4 mx-4 rounded-full overflow-hidden w-2/3 h-2/3">
-                        
-                        <Image
-                            src={user_info.profile_image ? user_info.profile_image : "/images/default-profile-image.jpg"}
-                            alt="Profile pic"
-                            width={150}
-                            height={150}
-                            className="object-cover w-full h-full"
-                        />
-                    </div>
-                    
-                    <div className="grid row-start-4 row-span-8 bg-gray-500 m-4 rounded">
-                        
-                        {/* <div className="row-span-8 bg-black">Bio</div> */} 
-
-                        {/* <TextInput multiline stle= {{ height: this.state.height }}
-                            onChange={this.onTextChange.bind(this)}
-                            value={this.state.text}
-                        /> */}
-
-                        <Box alignItems="center" w="100%">
-                            <TextArea h={20} placeholder="Tell us about yourself" w="75%" maxW="300" tvParallaxProperties={undefined} onTextInput={undefined} autoCompleteType={undefined} />
-                        </Box>
-
-                        <div className="bg-pink-600">
-                            <div>{`${user_info.display_name}'s skills`}</div>
-                            <div className="grid grid-cols-2 grid-rows-3">
-                                {sub_types?.map((type: string) => (
-                                    <div key={type} className="bg-blue-600 m-1">{type}</div>))}
-                            </div>
-                        </div>
-                
-                    </div>
-
-                </div>
-                <div className="row-span-12 col-start-2 col-span-3 bg-orange-400 m-4 rounded">Content</div>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 grid-rows-12 bg-gray-600 w-2/3">
+            <div className="col-span-1 col-start-1 bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
+                <Label htmlFor='display-name'>Display name</Label>
+                <Input name="display-name" placeholder={userInfo.display_name} />
             </div>
+            <div className="col-start-1 col-span-1 items-center">
+                <div className="mt-4 mx-4 rounded-full overflow-hidden w-1/2 h-2/3 ">
+                    <Image
+                        src={userInfo.profile_image ? userInfo.profile_image : "/images/default-profile-image.jpg"} 
+                        alt="Profile pic"
+                        width={150}
+                        height={150}
+                        className="object-cover w-full h-full"
+                    />
+                    
+                </div>
+                <Link className="text-primary font-medium underline" href="/profile/edit"> {/* TODO: FIX  THE HREF*/}
+                    <Image 
+                        src={"/images/edit-button.svg"} 
+                        alt={"Edit profile image button"} 
+                        width = {30}
+                        height = {30}
+                    />
+                </Link>
+            </div>
+
+            <div className="col-start-1 col-span-1 row-start-6">
+                <SubTypeMenu
+                    userType={userType}
+                    subTypes={subTypes}
+                    onSubTypeChange={handleSubTypeChange}
+                />
+            </div>
+            
+            <div>
+                <button type="submit">Submit Changes</button>
+            </div>
+            
+        </form>
         </>
     )
 }
