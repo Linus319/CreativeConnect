@@ -28,7 +28,7 @@ export default async function ProfilePage() {
             <div className="grid grid-cols-4 grid-rows-12 bg-gray-600 w-5/6">
                 <div className="grid row-span-12 col-start-1 bg-purple-600 m-4 rounded">
                     <div>
-                        <Link className="text-primary font-medium underline" href="/profile/edit">
+                        <Link className="text-primary font-medium underline" href={`/profile/edit?email=${user_info.email}`}>
                             <Image 
                                 src={"/images/edit-button.svg"} 
                                 alt={"Edit profile button"} 

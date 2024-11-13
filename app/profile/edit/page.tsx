@@ -1,7 +1,6 @@
 "use client"
 
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Input } from "@/components/ui/input";
@@ -9,63 +8,59 @@ import { Label } from "@/components/ui/label";
 import SubTypeMenu from "@/components/subtype-menu"
 import { useState, useEffect } from "react";
 
-export default async function EditProfilePage() {
-    const supabase = createClient();
-
-    const [user, setUser] = useState<any>(null);
+export default function EditProfilePage() {
     const [userInfo, setUserInfo] = useState<any>(null);
     const [subTypes, setSubTypes] = useState<string[]>([]);
     const [userType, setUserType] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const searchParams = useSearchParams();
+    const email = searchParams.get('email');
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (!email) {
+            setError("No email address.");
+            setLoading(false);
+            return;
+        }
 
-            if (userError) {
-                console.error("Error fetching user:", userError);
-                return redirect('/sign-in');
-            }
-
-            setUser(user);
-
-            const { data, error } = await supabase.from("users").select("*").eq("email", user.email);
-
-            if (error) {
-                console.error("Error fetching user profile:", error);
-                return <div>Couldn't retrieve user profile</div>
-            }
-
-            const user_info = data[0];
-            setUserInfo(user_info);
-            setSubTypes(user_info.sub_types || []);
-            setUserType(user_info.user_type);
+        const fetchUserData = () => {
+            let formData = new FormData(); 
+            formData.append("email", email as string);
+            fetch('/api/user-get', {body: formData, method: 'POST'} ).then((res) => res.json()).then((data) => {
+                console.log(data);
+                const user_info = data[0];
+                setUserInfo(user_info);
+                setSubTypes(user_info.sub_types || []);
+                setUserType(user_info.user_type);
+                setLoading(false);
+            });
+    
         };
 
         fetchUserData();
-    }, [supabase]);
+    }, [email]);
 
     const handleSubTypeChange = (newSelectedSubTypes: string[]) => {
         setSubTypes(newSelectedSubTypes);
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // // Update the user's profile with the new subtypes
-        // const { error } = await supabase.from('users')
-        //     .update({ sub_types: subTypes })
-        //     .eq('email', user.email);
 
-        // if (error) {
-        //     console.error('Error updating user profile:', error);
-        // } else {
-        //     console.log('User profile updated successfully');
-        //     // Redirect or show success message
-        // }
+        console.log("submit changes clicked");
+
+        // TODO: update user info in db
     };
 
-    if (!user || !userInfo) {
+    if (loading) {
         return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
     }
 
     return (
@@ -103,9 +98,14 @@ export default async function EditProfilePage() {
                     onSubTypeChange={handleSubTypeChange}
                 />
             </div>
+
+            <div className="col-start-2">
+                <Label htmlFor='city'>City</Label>
+                <Input name="city" placeholder={"City"} />
+            </div>
             
-            <div>
-                <button type="submit">Submit Changes</button>
+            <div className="row-start-12">
+                <button className="border rounded hover:bg-gray-400" type="submit">Submit Changes</button>
             </div>
             
         </form>
