@@ -1,19 +1,14 @@
+'use client';
+
 import { Images, Messages } from '@/components/dashboard';
 import Link from 'next/link';
-import { useState } from 'react';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
+import Chat from '@/components/dashboard-client';
 
-export default async function Dashboard() {
-  
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) redirect('/sign-in');
+export default function Dashboard() {
 
   return (
     <>
-      <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-4/5 max-w-screen-2xl">
+      <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
 
         <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
           <div className="flex flex-col bg-rose-600 h-5/6 rounded-3xl">
@@ -59,6 +54,11 @@ export default async function Dashboard() {
           <div className="bg-emerald-600 h-1/2 rounded-3xl">Calender</div>
         </div>
       </div>
+      <div className="fixed bottom-0 right-0">
+        <Chat /> 
+      </div>
+      
     </>
   );
 }
+//pass value to <Chat /> to toggle visibility so you don't have to use useEffet here

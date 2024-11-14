@@ -15,8 +15,8 @@ function DeleteButton({ id }: { id: string}) {
 
 export async function Images({ deleteMode }: { deleteMode: string } ) {
   const supabase = createClient();
-
-  const { data: images } = await supabase.from("images").select();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: images } = await supabase.from("images").select().eq('email', user.email);
 
 	const image_list = images?.map(img => 
                                  <div key={img.id} className="flex-auto relative">
