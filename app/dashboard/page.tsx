@@ -1,10 +1,22 @@
 'use client';
 
-import { Images, Messages } from '@/components/dashboard';
+import { Images, Notifications } from '@/components/dashboard';
 import Link from 'next/link';
 import Chat from '@/components/dashboard-client';
+import { useState, useEffect } from 'react';
+
 
 export default function Dashboard() {
+
+  const [chatHide, setChatHide] = useState('hidden');
+
+  function toggleChat() {
+    if (chatHide === 'hidden') {
+      setChatHide('visible');
+    } else {
+      setChatHide('hidden');
+    }
+  }
 
   return (
     <>
@@ -43,8 +55,8 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl overflow-x-auto">
-            <div className="overflow-y-auto mx-4">
-            <Messages />
+            <div className="overflow-y-auto mx-4" onClick={toggleChat}>
+            <Notifications />
             </div>
           </div>
         </div>
@@ -54,7 +66,7 @@ export default function Dashboard() {
           <div className="bg-emerald-600 h-1/2 rounded-3xl">Calender</div>
         </div>
       </div>
-      <div className="fixed bottom-0 right-0">
+      <div className={`fixed bottom-0 right-0 ${chatHide}`}>
         <Chat /> 
       </div>
       
