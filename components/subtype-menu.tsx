@@ -35,7 +35,6 @@ export default function SubTypeMenu({ userType, subTypes, onSubTypeChange }: Sub
 
     return (
         <>
-            <Label htmlFor="sub-type">Sub type</Label>
             <div>
                 {userType === "creative" && creativeSubTypes.map((subType) => (
                     <div key={subType}>

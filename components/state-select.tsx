@@ -14,8 +14,8 @@ export default function StateSelect({ state, setState }: StateSelectProps) {
 
     return (
         <>
-            <Label htmlFor="state">State</Label>
             <select
+                className="m-4 p-4 border rounded bg-gray-700"
                 name="state"
                 id="state"
                 value={state || ""}

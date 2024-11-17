@@ -9,6 +9,7 @@ import SubTypeMenu from "@/components/subtype-menu";
 import StateSelect from "@/components/state-select";
 import { useState, useEffect } from "react";
 import { updateProfileDetails } from "@/app/actions";
+import { Button } from "@/components/ui/button";
 
 export default function EditProfilePage() {
     const [userInfo, setUserInfo] = useState<any>(null);
@@ -77,71 +78,83 @@ export default function EditProfilePage() {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 grid-rows-12 bg-gray-600 w-2/3">
-                <div className="col-span-1 col-start-1 bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
-                    <Label htmlFor='display-name'>Display name</Label>
+            <form onSubmit={handleSubmit} className="w-1/2">
+                <div className="bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
+                    <Label className="m-4" htmlFor='display-name'>Display name</Label>
                     <Input 
+                        className="m-4 bg-gray-700"
                         name="display-name" 
                         value={displayName} 
                         onChange={(e: any) => setDisplayName(e.target.value)}
                     />
                 </div>
-                <div className="col-start-1 col-span-1 items-center">
-                    <div className="mt-4 mx-4 rounded-full overflow-hidden w-1/2 h-2/3 ">
-                        <Image
-                            src={userInfo.profile_image ? userInfo.profile_image : "/images/default-profile-image.jpg"} 
-                            alt="Profile pic"
-                            width={150}
-                            height={150}
-                            className="object-cover w-full h-full"
+
+                <div className="grid grid-cols-4">
+                    <div className="col-start-1 col-span-3 bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
+                        <Label className="m-4" htmlFor='city'>City</Label>
+                        <Input 
+                            className="m-4 bg-gray-700"
+                            name="city" 
+                            value={city || ""} 
+                            placeholder={city ||"City"}
+                            onChange={(e: any) => setCity(e.target.value)}
                         />
                     </div>
-                    <Link className="text-primary font-medium underline" href="/profile/change-image"> {/* TODO: FIX  THE HREF*/}
-                        <Image 
-                            src={"/images/edit-button.svg"} 
-                            alt={"Edit profile image button"} 
-                            width = {30}
-                            height = {30}
-                        />
-                    </Link>
-                </div>
 
-                <div className="col-start-1 col-span-1 row-start-6">
-                    <SubTypeMenu
-                        userType={userType}
-                        subTypes={subTypes}
-                        onSubTypeChange={handleSubTypeChange}
-                    />
+                    <div className="col-start-4 col-span-1 bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
+                        <div className="w-full">
+                            <Label className="m-4" htmlFor="state">State</Label>
+                            <StateSelect state={state} setState={setState}/>
+                        </div>
+                        
+                    </div>
                 </div>
-
-                <div className="col-start-2">
-                    <Label htmlFor='city'>City</Label>
-                    <Input 
-                        name="city" 
-                        value={city || ""} 
-                        placeholder={city ||"City"}
-                        onChange={(e: any) => setCity(e.target.value)}
-                    />
-                </div>
-
-                <div className="col-start-2">
-                    <StateSelect state={state} setState={setState}/>
-                </div>
-
-                <div className="col-start-2 row-start-5 row-span-3">
-                    <Label htmlFor="bio">Bio</Label>
+                
+                <div className="bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
+                    <Label className="m-4" htmlFor="bio">Bio</Label>
                     <textarea
                         name="bio" 
                         placeholder={bio || "Tell us about yourself"} 
                         value={bio || ""}
                         onChange={(e: any) => setBio(e.target.value)}
                         rows={4}
-                        className="w-full p-2 mt-1 rounded bg-gray-700 text-white border border-gray-500 resize-y overflow-auto"
+                        className="w-full p-2 m-4 rounded bg-gray-700 text-white border border-gray-500 resize-y overflow-auto"
                     />
                 </div>
                 
-                <div className="row-start-12">
-                    <button className="border rounded hover:bg-gray-400" type="submit">Submit Changes</button>
+                <div className="grid grid-cols-2">
+                    <div className="bg-gray-500 mt-4 mx-4 rounded flex justify-center items-center">
+                        <Label className="m-4" htmlFor="sub-type">Sub Type</Label>
+                        <div className="w-full my-4 mx-20 bg-gray-700 py-4 px-12 rounded">
+                            <SubTypeMenu
+                                userType={userType}
+                                subTypes={subTypes}
+                                onSubTypeChange={handleSubTypeChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col m-4 p-4 justify-center items-center bg-gray-500 mt-4 mx-4 rounded p-4t">
+                        <div className="w-2/3 h-auto overflow-hidden rounded-full">
+                            <Image
+                                src={userInfo.profile_image ? userInfo.profile_image : "/images/default-profile-image.jpg"} 
+                                alt="Profile pic"
+                                width={100}
+                                height={100}
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
+                        <div className="m-4">
+                            <Button>
+                                <Link href="/profile/change-image">Change Profile Image</Link>
+                            </Button>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div className="col-span-2 bg-gray-500 mt-4 mx-4 p-4 rounded flex justify-center items-center">
+                    <Button type="submit">Submit Changes</Button>
                 </div>
             </form>
         </>

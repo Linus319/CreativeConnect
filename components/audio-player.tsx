@@ -1,20 +1,16 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 import { PlayIcon, PauseIcon } from "lucide-react";
-
-interface AudioPlayerProps {}
 
 interface Track {
     imageUrl: string;
     title: string;
     src: string;
 }
-
 
 const AudioPlayer = ({ imageUrl, title, src }: Track) => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -98,14 +94,10 @@ const AudioPlayer = ({ imageUrl, title, src }: Track) => {
                                 <span>{formatTime(duration)}</span>
                             </div>
                         </div>
-
-                            
                         </CardContent>
                     </Card>
                 </div>
-
-                :
-                
+                :              
                 <div className="relative w-full h-full">
                     {imageUrl === "/images/default-audio-image.png" ? 
                     <div className="flex justify-center items-center w-full h-full bg-gray-500 rounded-lg">
@@ -138,7 +130,7 @@ const AudioPlayer = ({ imageUrl, title, src }: Track) => {
                             <button
                                 onClick={handlePlayPause}
                                 className="p-4 bg-gray-600 rounded-full hover:bg-gray-700 transition-colors opacity-50">
-                                <span className="text-3xl">▶</span>
+                                <PlayIcon className="w-6 h-6" />
                             </button>
                             <div className="">
                                 <p className="absolute bottom-4 text-2xl">{title}</p>
@@ -147,7 +139,6 @@ const AudioPlayer = ({ imageUrl, title, src }: Track) => {
                     </div>}
                 </div>
             }
-            
         </div>
     )
 };
