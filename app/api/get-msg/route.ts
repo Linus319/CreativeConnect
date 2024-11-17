@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 export async function POST(request: Request) {
   const supabase = createClient();
   const formData = await request.formData();
-  const sender = formData.get("sender");
+  const sender = (await supabase.auth.getUser()).data.user.email;
   const target = formData.get("target");
 
   //get messages that were sent to each other

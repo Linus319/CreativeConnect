@@ -1,8 +1,12 @@
 'use client';
 
-import { createClient } from '@/utils/supabase/server';
 import { deleteItem } from '@/lib/actions';
 import { useState, useEffect } from 'react';
+
+interface MessageProps {
+  currentUser: boolean;
+  message: string;
+}
 
 function DeleteButton({ id }: { id: string}) {
 
@@ -19,7 +23,7 @@ function DeleteButton({ id }: { id: string}) {
 export function Images({ deleteMode }: { deleteMode: string } ) {
 
   const [loading, setLoading] = useState(true);
-  const [images, setImages] = useState();
+  const [images, setImages] = useState([]);
 
 
   useEffect(() => {
@@ -56,7 +60,7 @@ export function Images({ deleteMode }: { deleteMode: string } ) {
 export function Notifications() {
 
   const [loading, setLoading] = useState(true);
-  const [notif, setNotif] = useState();
+  const [notif, setNotif] = useState([]);
 
   useEffect(() => {
     fetch('/api/get-ntf', { method: 'GET' })
@@ -92,5 +96,81 @@ export function Notifications() {
           <div className="flex flex-row m-5 gap-4">
             {usersList}
           </div>
+  );
+}
+
+export function Chat({ t }: {t: string}) {
+  const [messages, setMessages] = useState([]);
+  const [target, setTarget] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [vis, setVis] = useState("visible");
+
+
+  useEffect(() => {
+    const formData = new FormData();
+    setTarget(t);
+    formData.append("target", target);
+    console.log(target);
+    fetch('/api/get-msg', { body: formData, method: 'POST'})
+    .then((res) => res.json())
+    .then((data) => { 
+      setMessages(data);
+      setLoading(false)
+    })
+  }, [t])
+
+  function sendMsg(formData: FormData) {
+    formData.append('target', target);
+    fetch('/api/send-msg', { body: formData, method: 'POST'})
+    .then((res) => { 
+      console.log(res.status);
+    })
+  }
+
+  function toggleVisible() {
+    if (vis === 'visible') {
+      setVis("hidden");
+    } else {
+      setVis("visible");
+    }
+  }
+
+  return ( 
+    <div>
+      {target}
+    <button onClick={toggleVisible} className="bg-green-900 rounded-full size-10">
+    💬
+    </button>
+    <div className={`flex flex-col justify-between size-96 bg-gray-700 ${vis}`}>
+      <div className="overflow-y-auto">
+
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        messages.map(msg => {
+          return msg.sender === 'abel@abel.com' ? (
+            <SingleMessage currentUser={true} message={msg.message} key={msg.id}/>
+          ) : (
+            <SingleMessage currentUser={false} message={msg.message} key={msg.id}/>
+          );
+        })
+      )}
+      </div>
+      <form action={sendMsg} className="self-center">
+        <input name="msg" type="text" className="rounded-md px-2"/>
+        <button type="submit" className="px-1 m-1 bg-green-700 rounded-full">Send</button>
+      </form>
+    </div>
+
+    </div>
+  );
+
+}
+
+const SingleMessage = ( {currentUser, message}: MessageProps) => {
+  return (
+    <div className={`flex flex-row m-3 ${currentUser && 'justify-end'}`}>
+      <div className="rounded-full bg-blue-700 p-2 max-w-80">{message}</div>
+    </div>
   );
 }

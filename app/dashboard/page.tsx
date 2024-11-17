@@ -1,21 +1,21 @@
 'use client';
 
-import { Images, Notifications } from '@/components/dashboard';
+import { Images, Notifications, Chat } from '@/components/dashboard';
 import Link from 'next/link';
-import Chat from '@/components/dashboard-client';
 import { useState, useEffect } from 'react';
 
 
 export default function Dashboard() {
 
-  const [chatHide, setChatHide] = useState('hidden');
+  const [sendTo, setSendTo] = useState('');
 
   function toggleChat() {
-    if (chatHide === 'hidden') {
-      setChatHide('visible');
+    if (sendTo === 'joshua@gmail.com') {
+      setSendTo('null@null.com');
     } else {
-      setChatHide('hidden');
+      setSendTo('joshua@gmail.com');
     }
+    console.log(sendTo);
   }
 
   return (
@@ -66,11 +66,10 @@ export default function Dashboard() {
           <div className="bg-emerald-600 h-1/2 rounded-3xl">Calender</div>
         </div>
       </div>
-      <div className={`fixed bottom-0 right-0 ${chatHide}`}>
-        <Chat /> 
+      <div className="fixed bottom-0 right-0 ">
+        <Chat t={sendTo}/> 
       </div>
       
     </>
   );
 }
-//pass value to <Chat /> to toggle visibility so you don't have to use useEffet here
