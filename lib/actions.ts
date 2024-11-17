@@ -14,6 +14,7 @@ export async function uploadProfileImage(formData: FormData) {
   await supabase.storage.from('images').upload(title, file);
   const { data: url } = await supabase.storage.from('images').getPublicUrl(title);
   await supabase.from('users').update({profile_image: url.publicUrl}).eq('email', user.data.user.email);
+  redirect(`/profile/edit?email=${user.data.user.email}`);
 }
 
 export async function uploadImage(formData: FormData) {

@@ -13,7 +13,6 @@ export async function updateProfileDetails(formData: FormData, email: string) {
   const displayName = formData.get("display-name");
 
   const supabase = createClient();
-  console.log(formData);
 
   await supabase.from("users").update({
     bio: bio,
@@ -23,7 +22,7 @@ export async function updateProfileDetails(formData: FormData, email: string) {
     sub_types: subTypes
   }).eq('email', email);
 
-  redirect('/profile');
+  redirect(`/profile`);
 }
 
 export const signUpAction = async (formData: FormData) => {
@@ -88,7 +87,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/profile");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
