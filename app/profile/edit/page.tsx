@@ -34,7 +34,9 @@ export default function EditProfilePage() {
         const fetchUserData = () => {
             let formData = new FormData(); 
             formData.append("email", email as string);
-            fetch('/api/user-get', {body: formData, method: 'POST'} ).then((res) => res.json()).then((data) => {
+            fetch('/api/user-get', {body: formData, method: 'POST'} ).then((res) => 
+                res.json()
+            ).then((data) => {
                 const user_info = data[0];
                 setUserInfo(user_info);
                 setSubTypes(user_info.sub_types || []);
@@ -134,7 +136,7 @@ export default function EditProfilePage() {
                         value={bio || ""}
                         onChange={(e: any) => setBio(e.target.value)}
                         rows={4}
-                        className="w-full p-2 mt-1 rounded bg-gray-700 text-white border border-gray-500 resize-y overflow-auto" // Styling for textarea
+                        className="w-full p-2 mt-1 rounded bg-gray-700 text-white border border-gray-500 resize-y overflow-auto"
                     />
                 </div>
                 
