@@ -1,21 +1,16 @@
 'use client';
 
-import { Images, Notifications, Chat } from '@/components/dashboard';
+import { Images, Notifications, Connections, Chat } from '@/components/dashboard';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 
 export default function Dashboard() {
 
-  const [sendTo, setSendTo] = useState('');
+  const [sendTo, setSendTo] = useState('none');
 
-  function toggleChat() {
-    if (sendTo === 'joshua@gmail.com') {
-      setSendTo('null@null.com');
-    } else {
-      setSendTo('joshua@gmail.com');
-    }
-    console.log(sendTo);
+  function selectChat(e) {
+    setSendTo(e.currentTarget.attributes.email.value);
   }
 
   return (
@@ -55,19 +50,21 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl overflow-x-auto">
-            <div className="overflow-y-auto mx-4" onClick={toggleChat}>
-            <Notifications />
+            <div className="overflow-y-auto mx-4" >
+            <Notifications selectChat={selectChat}/>
             </div>
           </div>
         </div>
 
         <div className="flex justify-center flex-col max-w-screen-md basis-5/12 bg-zinc-600">
-          <div className="bg-violet-600 h-1/2 rounded-3xl">Appointments</div>
+          <div className="bg-violet-600 h-1/2 rounded-3xl">
+            <Connections />
+          </div>
           <div className="bg-emerald-600 h-1/2 rounded-3xl">Calender</div>
         </div>
       </div>
       <div className="fixed bottom-0 right-0 ">
-        <Chat t={sendTo}/> 
+        <Chat target={sendTo}/> 
       </div>
       
     </>

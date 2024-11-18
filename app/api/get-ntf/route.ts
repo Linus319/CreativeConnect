@@ -2,10 +2,21 @@
 import { createClient } from '@/utils/supabase/server';
 import { useEffect } from 'react';
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = createClient();
 
-  const { data: users } = await supabase.from("users").select();
 
+  const { data: { user }} = await supabase.auth.getUser();
+  const { data: messaged } = await supabase.from('messages').select('target').eq('sender', user.email);
+  //messaged may show repeated entries. Code below removes repeats
+  const obj = messaged.map(JSON.stringify);
+  const noDoubles = Array.from(new Set(obj)).map(JSON.parse);
+  //This creates an array for the supabase .in() function to filter which users to return
+  const arr = [];
+  for (let x of noDoubles) {
+    arr.push(x['target']);
+  }
+
+  const { data: users } = await supabase.from('users').select().in('email', arr);
   return Response.json(users);
 }
