@@ -9,8 +9,9 @@ export async function GET(request: Request) {
   const { data: { user }} = await supabase.auth.getUser();
   const { data: messaged } = await supabase.from('messages').select('target').eq('sender', user.email);
   //messaged may show repeated entries. Code below removes repeats
-  const obj = messaged.map(JSON.stringify);
-  const noDoubles = Array.from(new Set(obj)).map(JSON.parse);
+  const obj = messaged.map(a => JSON.stringify(a));
+  console.log(obj);
+  const noDoubles = Array.from(new Set(obj)).map(a => JSON.parse(a));
   //This creates an array for the supabase .in() function to filter which users to return
   const arr = [];
   for (let x of noDoubles) {

@@ -57,7 +57,7 @@ export function Images({ deleteMode }: { deleteMode: string } ) {
   );
 }
 
-export function Notifications({ selectChat }) {
+export function Notifications({ selectChat }: { selectChat: any }) {
 
   const [loading, setLoading] = useState(true);
   const [notif, setNotif] = useState([]);
@@ -77,12 +77,12 @@ export function Notifications({ selectChat }) {
   const usersList = notif?.map((user, k) => {
   
                                 return user.profile_image == null ? 
-                                        <div className="flex-auto" key={k} onClick={selectChat} email={user.email}>
+                                        <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
                                           <img src={image} className="rounded-full max-w-10"/>
                                           <div className="flex justify-center" > {user.display_name} </div>
                                         </div>
                                         :  
-                                        <div className="flex-auto" key={k} onClick={selectChat} email={user.email}>
+                                        <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
                                           <img src={user.profile_image} className="rounded-full max-w-10"/>
                                           <div className="flex justify-center" > {user.display_name} </div>
                                         </div>
@@ -102,7 +102,7 @@ export function Notifications({ selectChat }) {
 export function Connections() {
 
   const [loading, setLoading] = useState(true);
-  const [cons, setCons] = useState();
+  const [cons, setCons] = useState([]);
 
   useEffect(() => {
     fetch('api/get-cons', { method: 'GET' })
@@ -118,12 +118,12 @@ export function Connections() {
   const usersList = cons?.map((user, k) => {
   
                                 return user.profile_image == null ? 
-                                        <div className="flex-auto" key={k} email={user.email}>
+                                        <div className="flex-auto" key={k}>
                                           <img src={image} className="rounded-full max-w-10"/>
                                           <div className="flex justify-center" > {user.display_name} </div>
                                         </div>
                                         :  
-                                        <div className="flex-auto" key={k} email={user.email}>
+                                        <div className="flex-auto" key={k}>
                                           <img src={user.profile_image} className="rounded-full max-w-10"/>
                                           <div className="flex justify-center" > {user.display_name} </div>
                                         </div>

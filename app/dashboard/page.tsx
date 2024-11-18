@@ -9,8 +9,8 @@ export default function Dashboard() {
 
   const [sendTo, setSendTo] = useState('none');
 
-  function selectChat(e) {
-    setSendTo(e.currentTarget.attributes.email.value);
+  function selectChat(e: React.ChangeEvent<any>) {
+    setSendTo(e.currentTarget.attributes.id.value);
   }
 
   return (
