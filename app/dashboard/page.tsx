@@ -1,19 +1,21 @@
-import { Images, Messages } from '@/components/dashboard';
+'use client';
+
+import { Images, Notifications, Connections, Chat } from '@/components/dashboard';
 import Link from 'next/link';
-import { useState } from 'react';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-export default async function Dashboard() {
-  
-  const supabase = createClient();
-  const { data: user } = await supabase.auth.getUser();
 
-  if (!user) redirect('/sign-in');
+export default function Dashboard() {
+
+  const [sendTo, setSendTo] = useState('none');
+
+  function selectChat(e: React.ChangeEvent<any>) {
+    setSendTo(e.currentTarget.attributes.id.value);
+  }
 
   return (
     <>
-      <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-4/5 max-w-screen-2xl">
+      <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
 
         <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
           <div className="flex flex-col bg-rose-600 h-5/6 rounded-3xl">
@@ -48,17 +50,23 @@ export default async function Dashboard() {
             </div>
           </div>
           <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl overflow-x-auto">
-            <div className="overflow-y-auto mx-4">
-            <Messages />
+            <div className="overflow-y-auto mx-4" >
+            <Notifications selectChat={selectChat}/>
             </div>
           </div>
         </div>
 
         <div className="flex justify-center flex-col max-w-screen-md basis-5/12 bg-zinc-600">
-          <div className="bg-violet-600 h-1/2 rounded-3xl">Appointments</div>
+          <div className="bg-violet-600 h-1/2 rounded-3xl">
+            <Connections />
+          </div>
           <div className="bg-emerald-600 h-1/2 rounded-3xl">Calender</div>
         </div>
       </div>
+      <div className="fixed bottom-0 right-0 ">
+        <Chat target={sendTo}/> 
+      </div>
+      
     </>
   );
 }
