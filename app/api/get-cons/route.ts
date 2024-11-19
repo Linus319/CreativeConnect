@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const supabase = createClient();
@@ -6,7 +7,11 @@ export async function GET(request: Request) {
   const { data: { user }} = await supabase.auth.getUser();
 
   const { data: cons } = await supabase.from('connections').select('cons').eq('email', user.email);
-  const { data: consList } = await supabase.from('users').select().in('email', cons[0]['cons']);
-
-  return Response.json(consList);
+  
+  if (cons === undefined || cons.length == 0) {
+    return Response.json([]);
+  } else {
+    let { data: consList } = await supabase.from('users').select().in('email', cons[0]['cons']);
+    return Response.json(consList);
+  }
 }
