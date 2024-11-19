@@ -12,7 +12,7 @@ const nextConfig = {
     },
     // experimental: {
     //     serverActions: {
-    //       allowedOrigins: ["gloomy-broomstick-979jg9j7r4p395gj-3000.app.github.dev", "localhost:3000"]
+    //       allowedOrigins: ["ubiquitous-funicular-pjrp5rpjwv5397j4-3000.app.github.dev", "localhost:3000"]
     //     }
     //   },
 };

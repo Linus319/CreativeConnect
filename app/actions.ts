@@ -5,6 +5,26 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+export async function updateProfileDetails(formData: FormData, email: string) {
+  const subTypes = formData.getAll("sub-types");
+  const bio = formData.get("bio");
+  const city = formData.get("city");
+  const state = formData.get("state");
+  const displayName = formData.get("display-name");
+
+  const supabase = createClient();
+
+  await supabase.from("users").update({
+    bio: bio,
+    city: city,
+    state: state,
+    display_name: displayName,
+    sub_types: subTypes
+  }).eq('email', email);
+
+  redirect(`/profile`);
+}
+
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
@@ -67,7 +87,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/profile");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {

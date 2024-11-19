@@ -4,6 +4,19 @@ import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+export async function uploadProfileImage(formData: FormData) {
+  const supabase = createClient();
+  const user = await supabase.auth.getUser();
+
+  const file: File | any = formData.get('file');
+  const title = user?.data?.user?.email?.split("@")[0] + Date.now();
+
+  await supabase.storage.from('images').upload(title, file);
+  const { data: url } = await supabase.storage.from('images').getPublicUrl(title);
+  await supabase.from('users').update({profile_image: url.publicUrl}).eq('email', user.data.user.email);
+  redirect(`/profile/edit?email=${user.data.user.email}`);
+}
+
 export async function uploadImage(formData: FormData) {
 
 
