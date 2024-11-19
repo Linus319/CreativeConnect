@@ -24,8 +24,17 @@ interface User {
     user_type: string;
 }
 
+interface Image {
+    id: number;
+    email: string;
+    url: string;
+    is_song_artwork: boolean;
+}
+
+
 export default function ProfilePage() {
     const [audio, setAudio] = useState<Audio[]>([]);
+    const [images, setImages] = useState<Image[]>([]);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [audioEnabled, setAudioEnabled] = useState<boolean>(true)
@@ -39,15 +48,21 @@ export default function ProfilePage() {
     
             const formData = new FormData();
             formData.append("email", userData.email);
-            const audioRes = await fetch('/api/get-user-content', {
+            const contentRes = await fetch('/api/get-creative-profile', {
                 method: 'POST',
                 body: formData,
             });
-            const audioData = await audioRes.json();
-            setAudio(audioData);        
+            const test = await contentRes.json();
+            console.log(test);
+            // const audioData = await contentRes.json()[audio];
+            // const imageData = await contentRes.json()[]
+            // setAudio(audioData);
+            // setImages(imageData);   
+
           } catch (error) {
             console.error("Error fetching user data or audio content", error);
           } finally {
+            
             setLoading(false);
           }
         };
