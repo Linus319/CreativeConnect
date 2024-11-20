@@ -14,6 +14,13 @@ interface Image {
     is_song_artwork: boolean;
 }
 
+interface Video {
+    src: string;
+    email: string;
+    title: string;
+    id: number;
+}
+
 interface AudioWithImage extends AudioTrack {
     image_url: string;
 }
@@ -41,8 +48,9 @@ export async function POST(request: Request) {
         }
     }));
 
-    // get images from images table that are not song artwork
     const { data: images }: { data: Image[] } = await supabase.from("images").select().eq('email', email).neq('is_song_artwork', true);
 
-    return Response.json({ audio: audioWithImages, images: images });
+    const { data: videos }: { data: Video[] } = await supabase.from("video").select().eq('email', email);
+
+    return Response.json({ audio: audioWithImages, images: images, videos: videos });
 }
