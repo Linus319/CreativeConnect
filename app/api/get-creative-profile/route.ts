@@ -43,11 +43,6 @@ export async function POST(request: Request) {
 
     // get images from images table that are not song artwork
     const { data: images }: { data: Image[] } = await supabase.from("images").select().eq('email', email).neq('is_song_artwork', true);
-    
-    // combine images and audio (and soon video)
-    const allData = new FormData();
-    allData.append("audio", JSON.stringify(audioWithImages));
-    allData.append("images", JSON.stringify(images));
 
-    return Response.json(allData);
+    return Response.json({ audio: audioWithImages, images: images });
 }
