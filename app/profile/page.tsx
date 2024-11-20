@@ -61,7 +61,7 @@ export default function ProfilePage() {
     
             const formData = new FormData();
             formData.append("email", userData.email);
-            const contentRes = await fetch('/api/get-creative-profile', {
+            const contentRes = await fetch('/api/get-user-profile', {
                 method: 'POST',
                 body: formData,
             });
@@ -205,7 +205,7 @@ export default function ProfilePage() {
                 
 
 
-                <div className="flex-grow rounded grid grid-cols-4 grid-rows-3 gap-4 p-4 bg-gray-500">
+                <div className="flex-grow rounded grid grid-cols-4 grid-rows-3 gap-4 p-4">
 
                     {audioEnabled ? audio.map((track) => 
                         <div key={track.id} className="col-span-1 row-span-1 flex justify-center items-center bg-gray-800 rounded-lg">

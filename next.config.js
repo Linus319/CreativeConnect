@@ -10,11 +10,11 @@ const nextConfig = {
         ],
         
     },
-    experimental: {
-        serverActions: {
-          allowedOrigins: ["studious-carnival-v6vqjvq69qghp67r.github.dev", "localhost:3000"]
-        }
-    },
+    // experimental: {
+    //     serverActions: {
+    //       allowedOrigins: ["studious-carnival-v6vqjvq69qghp67r.github.dev", "localhost:3000"]
+    //     }
+    // },
 };
 
 module.exports = nextConfig;
