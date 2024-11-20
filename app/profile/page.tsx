@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import AudioPlayer from '@/components/audio-player';
+import ProfileContentImage from '@/components/profile-content-image';
+import VideoPlayer from '@/components/video-player';
 import { useState, useEffect } from 'react';
 
 interface Audio {
@@ -24,11 +26,31 @@ interface User {
     user_type: string;
 }
 
+interface Image {
+    id: number;
+    email: string;
+    url: string;
+    is_song_artwork: boolean;
+    caption: string;
+}
+
+interface Video {
+    url: string;
+    email: string;
+    title: string;
+    id: number;
+}
+
+
 export default function ProfilePage() {
     const [audio, setAudio] = useState<Audio[]>([]);
+    const [images, setImages] = useState<Image[]>([]);
+    const [videos, setVideos] = useState<Video[]>([]);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [audioEnabled, setAudioEnabled] = useState<boolean>(true)
+    const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
+    const [imagesEnabled, setImagesEnabled] = useState<boolean>(true);
+    const [videosEnabled, setVideosEnabled] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -39,12 +61,14 @@ export default function ProfilePage() {
     
             const formData = new FormData();
             formData.append("email", userData.email);
-            const audioRes = await fetch('/api/get-user-content', {
+            const contentRes = await fetch('/api/get-creative-profile', {
                 method: 'POST',
                 body: formData,
             });
-            const audioData = await audioRes.json();
-            setAudio(audioData);        
+            const contentData = await contentRes.json();
+            setAudio(contentData.audio);
+            setImages(contentData.images);
+            setVideos(contentData.videos);
           } catch (error) {
             console.error("Error fetching user data or audio content", error);
           } finally {
@@ -54,14 +78,30 @@ export default function ProfilePage() {
         fetchUserData();
     }, []);
 
-    const handleToggleChange = () => {
+    const handleToggleAudio = () => {
         if (audioEnabled) {
-            console.log("disabled audio");
             setAudioEnabled(false);
         }
         else {
-            console.log("enabled audio");
             setAudioEnabled(true);
+        }
+    }
+
+    const handleToggleImages = () => {
+        if (imagesEnabled) {
+            setImagesEnabled(false);
+        }
+        else {
+            setImagesEnabled(true);
+        }
+    }
+
+    const handleToggleVideos = () => {
+        if (videosEnabled) {
+            setVideosEnabled(false);
+        }
+        else {
+            setVideosEnabled(true);
         }
     }
 
@@ -136,7 +176,7 @@ export default function ProfilePage() {
                         <div className="flex items-center">
                             <span className="mr-2">Images</span>
                             <label className="relative inline-block w-12 h-6">
-                                <input type="checkbox" className="peer sr-only" />
+                                <input type="checkbox" className="peer sr-only" defaultChecked onChange={handleToggleImages} />
                                 <span className="block absolute w-6 h-6 bg-gray-300 rounded-full peer-checked:bg-purple-400 peer-checked:translate-x-6 transition-transform duration-300"></span>
                                 <span className="block w-12 h-6 bg-gray-200 rounded-full"></span>
                             </label>
@@ -145,7 +185,7 @@ export default function ProfilePage() {
                         <div className="flex items-center">
                             <span className="mr-2">Audio</span>
                             <label className="relative inline-block w-12 h-6">
-                                <input type="checkbox" className="peer sr-only" defaultChecked onChange={handleToggleChange}/>
+                                <input type="checkbox" className="peer sr-only" defaultChecked onChange={handleToggleAudio}/>
                                 <span className="block absolute w-6 h-6 bg-gray-300 rounded-full peer-checked:bg-purple-400 peer-checked:translate-x-6 transition-transform duration-300"></span>
                                 <span className="block w-12 h-6 bg-gray-200 rounded-full"></span>
                             </label>
@@ -154,7 +194,7 @@ export default function ProfilePage() {
                         <div className="flex items-center">
                             <span className="mr-2">Video</span>
                             <label className="relative inline-block w-12 h-6">
-                                <input type="checkbox" className="peer sr-only" />
+                                <input type="checkbox" className="peer sr-only" defaultChecked onClick={handleToggleVideos}/>
                                 <span className="block absolute w-6 h-6 bg-gray-300 rounded-full peer-checked:bg-purple-400 peer-checked:translate-x-6 transition-transform duration-300"></span>
                                 <span className="block w-12 h-6 bg-gray-200 rounded-full"></span>
                             </label>
@@ -165,7 +205,8 @@ export default function ProfilePage() {
                 
 
 
-                <div className="flex-grow rounded grid grid-cols-4 grid-rows-3 gap-4 p-4">
+                <div className="flex-grow rounded grid grid-cols-4 grid-rows-3 gap-4 p-4 bg-gray-500">
+
                     {audioEnabled ? audio.map((track) => 
                         <div key={track.id} className="col-span-1 row-span-1 flex justify-center items-center bg-gray-800 rounded-lg">
                             <AudioPlayer 
@@ -175,6 +216,17 @@ export default function ProfilePage() {
                             />
                         </div>
                     ) : <div></div>}
+
+                    {imagesEnabled ? images.map((image) => 
+                        <div className="">
+                            <ProfileContentImage key={image.id} src={image.url} caption={image.caption}/>
+                        </div>
+                        
+                    ) : <div></div>}
+
+                    {videosEnabled ? videos.map((video) => 
+                        <VideoPlayer key={video.id} title={video.title} src={video.url} />) : <div></div>
+                    }
                 </div>
             </div>
         </div>}
