@@ -156,7 +156,7 @@ export default function ProfilePage() {
                         <div className="flex items-center">
                             <span className="mr-2">Images</span>
                             <label className="relative inline-block w-12 h-6">
-                                <input type="checkbox" className="peer sr-only" />
+                                <input type="checkbox" className="peer sr-only" defaultChecked onChange={handleToggleImages} />
                                 <span className="block absolute w-6 h-6 bg-gray-300 rounded-full peer-checked:bg-purple-400 peer-checked:translate-x-6 transition-transform duration-300"></span>
                                 <span className="block w-12 h-6 bg-gray-200 rounded-full"></span>
                             </label>
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                         <div className="flex items-center">
                             <span className="mr-2">Video</span>
                             <label className="relative inline-block w-12 h-6">
-                                <input type="checkbox" className="peer sr-only" defaultChecked onChange={handleToggleImages}/>
+                                <input type="checkbox" className="peer sr-only" defaultChecked />
                                 <span className="block absolute w-6 h-6 bg-gray-300 rounded-full peer-checked:bg-purple-400 peer-checked:translate-x-6 transition-transform duration-300"></span>
                                 <span className="block w-12 h-6 bg-gray-200 rounded-full"></span>
                             </label>
@@ -198,7 +198,7 @@ export default function ProfilePage() {
                     ) : <div></div>}
 
                     {imagesEnabled ? images.map((image) => 
-                        <div className="rounded-lg">
+                        <div className="">
                             <ProfileContentImage src={image.url} caption={image.caption}/>
                         </div>
                         
