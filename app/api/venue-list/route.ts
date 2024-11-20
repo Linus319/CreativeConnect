@@ -8,11 +8,11 @@ export async function POST(request: Request) {
   const filter = Array.from(formData.keys());
 
   if (filter.length === 0) {
-    const list = await supabase.from("users").select().eq('user_type', 'creative');
+    const list = await supabase.from("users").select().eq('user_type', 'venue');
     return Response.json(list);
 
   }
-  const list = await supabase.from("users").select().eq('user_type', 'creative').overlaps('sub_types', filter);
+  const list = await supabase.from("users").select().eq('user_type', 'venue').overlaps('sub_types', filter);
 
 
 
