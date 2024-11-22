@@ -1,5 +1,6 @@
 'use client';
 
+import { createClient } from '@supabase/supabase-js';
 import { deleteItem } from '@/lib/actions';
 import { useState, useEffect } from 'react';
 
@@ -144,6 +145,37 @@ export function Chat({ target }: {target: string}) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vis, setVis] = useState("visible");
+  const [currentUser, setCurrentUser] = useState();
+
+  const SUPABASE_URL = 'https://skhxtmjbcfmytgqgdayj.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNraHh0bWpiY2ZteXRncWdkYXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyODc4ODksImV4cCI6MjA0NDg2Mzg4OX0.xtiyeanOVkSUYC5id8qG3eo3pJA3icrCSQA5yGUpbew';
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const chatReceive = supabase.channel('test', { config: { broadcast : { self: true } } });
+  const chatSend = supabase.channel('test');
+
+  const myChannel = supabase.channel('room-2', {
+    config: {
+      broadcast: { self: true },
+    },
+  })
+  
+  myChannel.on(
+    'broadcast',
+    { event: 'test-my-messages' },
+    (payload) => console.log(payload)
+  )
+  
+  myChannel.subscribe((status) => {
+    if (status !== 'SUBSCRIBED') { return }
+    myChannel.send({
+      type: 'broadcast',
+      event: 'test-my-messages',
+      payload: { message: 'talking to myself' },
+    })
+  })
+  
 
 
   useEffect(() => {
@@ -156,6 +188,12 @@ export function Chat({ target }: {target: string}) {
       setMessages(data);
       setLoading(false)
     })
+    fetch('/api/get-current-user', { method: 'POST' } )
+    .then((res) => res.json())
+    .then((data) => {
+      setCurrentUser(data.email);
+    })
+
   }, [target])
 
   function sendMsg(formData: FormData) {
@@ -187,7 +225,7 @@ export function Chat({ target }: {target: string}) {
        : 
       <div className="overflow-y-auto ">
        {messages.map(msg => {
-          return msg.sender === 'abel@abel.com' ? 
+          return msg.sender === currentUser ? 
             <SingleMessage currentUser={true} message={msg.message} key={msg.id}/>
            : 
             <SingleMessage currentUser={false} message={msg.message} key={msg.id}/>
