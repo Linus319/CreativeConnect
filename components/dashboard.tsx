@@ -2,7 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { deleteItem } from '@/lib/actions';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface MessageProps {
   currentUser: boolean;
@@ -150,13 +150,12 @@ export function Chat({ target }: {target: string}) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vis, setVis] = useState("visible");
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState('none');
+  const messageRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
+  const channelName = target.localeCompare(currentUser) ? target.split('@')[0] + currentUser.split('@')[0] : currentUser.split('@')[0] + target.split('@')[0];
 
-
-  const chatReceive = supabase.channel('test', { config: { broadcast : { self: true } } });
-  const chatSend = supabase.channel('test');
-
-  const myChannel = supabase.channel('room-2', {
+  const myChannel = supabase.channel(channelName, {
     config: {
       broadcast: { self: true },
     },
@@ -170,39 +169,49 @@ export function Chat({ target }: {target: string}) {
   myChannel.on(
     'broadcast',
     { event: 'test-my-messages' },
-    (payload) => console.log("got message!")
+    (payload) => {
+      const newPush = messages;
+      newPush.push(payload['payload'][0]);
+      setMessages([...newPush]);
+    }
   )
+
+  function scrollBottom() {
+    messageRef.current?.scrollIntoView()
+  }
 
   useEffect(() => {
     setLoading(true);
     const formData = new FormData();
     formData.append("target", target);
+    fetch('/api/get-current-user', { method: 'POST' } )
+    .then((res) => res.json())
+    .then((data) => {
+      setCurrentUser(data.email);
+    })
     fetch('/api/get-msg', { body: formData, method: 'POST'})
     .then((res) => res.json())
     .then((data) => { 
       setMessages(data);
       setLoading(false)
     })
-    fetch('/api/get-current-user', { method: 'POST' } )
-    .then((res) => res.json())
-    .then((data) => {
-      setCurrentUser(data.email);
-    })
-
   }, [target])
+
+  useEffect(() => {
+    scrollBottom();
+  }, [messages]);
 
   function sendMsg(formData: FormData) {
     formData.append('target', target);
-/*    fetch('/api/send-msg', { body: formData, method: 'POST'})
-    .then((res) => { 
-      console.log(res.status);
-    })
-  */
-    console.log("sending message");
-    myChannel.send({
-      type: 'broadcast',
-      event: 'test-my-messages',
-      payload : { message: formData.get('msg')}
+    fetch('/api/send-msg', { body: formData, method: 'POST'})
+    .then((res) => res.json())
+    .then((data) => { 
+      console.log("sending message to channel: ", myChannel['topic']);
+      myChannel.send({
+        type: 'broadcast',
+        event: 'test-my-messages',
+        payload : data
+      })
     })
   }
 
@@ -225,7 +234,7 @@ export function Chat({ target }: {target: string}) {
       {loading ? 
         <div className="self-center">Loading...</div>
        : 
-      <div className="overflow-y-auto ">
+      <div className="overflow-y-auto" id="content">
        {messages.map(msg => {
           return msg.sender === currentUser ? 
             <SingleMessage currentUser={true} message={msg.message} key={msg.id}/>
@@ -233,10 +242,17 @@ export function Chat({ target }: {target: string}) {
             <SingleMessage currentUser={false} message={msg.message} key={msg.id}/>
           
         })}
+        <div ref={messageRef} />
       </div>
       }
       
-      <form action={sendMsg} className="self-center">
+      <form 
+        ref={inputRef} 
+        action={ async (formData) => { 
+          await sendMsg(formData) 
+          inputRef.current?.reset() 
+        }}  
+          className="self-center">
         <input name="msg" type="text" className="rounded-md px-2"/>
         <button type="submit" className="px-1 m-1 bg-green-700 rounded-full">Send</button>
       </form>

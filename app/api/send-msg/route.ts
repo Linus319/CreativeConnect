@@ -8,8 +8,8 @@ export async function POST(request: Request) {
   const tar = await formData.get('target');
   const msg = await formData.get('msg');
 
-  const { data: result } = await supabase.from('messages').insert({ sender: sen, target: tar, message: msg });
+  const { data: result } = await supabase.from('messages').insert({ sender: sen, target: tar, message: msg }).select();
 
-  return Response.json({ status: 200 });
+  return Response.json(result);
 }
 
