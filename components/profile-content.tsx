@@ -90,6 +90,7 @@ const ProfileContent = ({
                         <AudioPlayer 
                             imageUrl={track.image_url}
                             title={track.title}
+                            caption={track.caption}
                             src={track.url}
                         />
                     </div>
@@ -102,7 +103,7 @@ const ProfileContent = ({
                 ) : <div></div>}
 
                 {videosEnabled ? videos.map((video) => 
-                    <VideoPlayer key={video.id} title={video.title} src={video.url} />) : <div></div>
+                    <VideoPlayer key={video.id} title={video.title} caption={video.caption} src={video.url} />) : <div></div>
                 }
             </div>
         </div>

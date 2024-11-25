@@ -12,7 +12,7 @@ interface Track {
     src: string;
 }
 
-const AudioPlayer = ({ imageUrl, title, src }: Track) => {
+const AudioPlayer = ({ imageUrl, title, caption,  src }: Track) => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
     const [currentTime, setCurrentTime] = useState<number>(0);

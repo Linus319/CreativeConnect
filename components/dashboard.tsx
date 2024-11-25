@@ -1,6 +1,6 @@
 'use client';
 
-import { createClient } from '@supabase/supabase-js';
+import { Supabase } from '@/lib/supa';
 import { deleteItem } from '@/lib/actions';
 import { useState, useEffect, useRef } from 'react';
 
@@ -9,9 +9,7 @@ interface MessageProps {
   message: string;
 }
 
-const SUPABASE_URL = 'https://skhxtmjbcfmytgqgdayj.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNraHh0bWpiY2ZteXRncWdkYXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyODc4ODksImV4cCI6MjA0NDg2Mzg4OX0.xtiyeanOVkSUYC5id8qG3eo3pJA3icrCSQA5yGUpbew';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = Supabase();
 
 function DeleteButton({ id }: { id: string}) {
 
