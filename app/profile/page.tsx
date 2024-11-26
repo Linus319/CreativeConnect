@@ -4,6 +4,7 @@ import ProfileContent from '@/components/profile-content';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Chat } from './chat';
 
 
 interface User {
@@ -137,7 +138,7 @@ export default function ProfilePage() {
                             </> : <div></div>}
 
                         <div className="flex justify-center">
-                            <button className="m-4 px-8 py-4 border rounded-lg bg-gray-500 hover:bg-gray-400">Send message</button>
+                          <Chat target="ding@dong.com" />
                         </div>
                     </div>
 

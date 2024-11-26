@@ -2,6 +2,8 @@
 import { Supabase } from '@/lib/supa';
 import { uploadImage } from '@/lib/actions';
 import { useState, useEffect } from 'react';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 const supabase = Supabase();
 const tus = require('tus-js-client');
@@ -18,7 +20,6 @@ export default function CreateItem() {
     const { data: { user }} = await supabase.auth.getUser();
     const fileName = user.email.split('@')[0] + Date.now();
 
-    await uploadFile("video", fileName, file, fileType);
 
     //add data to the table now:
     let bucket = '*';
@@ -30,12 +31,17 @@ export default function CreateItem() {
       bucket = "images";
     }
 
+    await uploadFile(bucket, fileName, file, fileType);
+
     const { data: url } = await supabase.storage.from(bucket).getPublicUrl(fileName);
     const { data: result } = await supabase.from(bucket).insert({ email: user.email,
-                                                                          url: url.publicUrl,
-                                                                          title: file['name'],
-                                                                          caption: formData.get('caption')});
+                                                                  url: url.publicUrl,
+                                                                  title: file['name'],
+                                                                  caption: formData.get('caption')});
+
+                                                  
   
+    redirect('/dashboard');
   }
 
   async function uploadFile(bucketName, fileName, file, fileType) {
@@ -89,15 +95,12 @@ export default function CreateItem() {
       })
   }
 
-
-
-
   return (
     <div className="flex flex-col">
       <form action={uploadThing}>
         <div className="flex flex-col">
           <label>Choose file</label>
-          <input name="file" type="file" accept="image/*, audio/*, video/*," required/>
+          <input name="file" type="file" accept="image/*, audio/mpeg, video/*," required/>
           <label>Caption</label>
           <input name="caption" type="text" required/>
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Submit</button>
@@ -109,3 +112,5 @@ export default function CreateItem() {
   );
 
 }
+//const [hideAlbumArt, setHideAlbumArt] = useState(false);
+//<div className={` ${hideAlbumArt ? 'visible' : 'hidden'} `}>INPUT FOR ALBUM ART</div>
