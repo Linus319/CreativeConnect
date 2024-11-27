@@ -4,6 +4,7 @@ import { Notifications, Connections, Chat } from '@/components/dashboard';
 import ProfileContent from '@/components/profile-content';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface User {
   email: string;
@@ -21,6 +22,7 @@ interface Audio {
   url: string;
   artwork_id: number;
   id: number;
+  caption: string;
   image_url: string;
 }
 
@@ -36,6 +38,7 @@ interface Video {
   url: string;
   email: string;
   title: string;
+  caption: string;
   id: number;
 }
 
@@ -92,6 +95,10 @@ export default function Dashboard() {
         <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
           <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
             <div className="flex flex-col bg-rose-600 h-full rounded-3xl">
+              <div className="flex justify-between m-3">
+              <Link href="/dashboard/create" className="bg-blue-500 rounded-full p-2">Add stuff</Link>
+              <Link href="/dashboard/delete" className="bg-blue-500 rounded-full p-2">Del stuff</Link>
+              </div>
               {user && (
                 <ProfileContent
                   audio={audio}

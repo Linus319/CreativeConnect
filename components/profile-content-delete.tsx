@@ -1,6 +1,7 @@
 import AudioPlayer from './audio-player';
 import ProfileContentImage from './profile-content-image';
 import VideoPlayer from './video-player';
+import { deleteItems } from '../lib/actions';
 
 interface Audio {
     title: string;
@@ -40,7 +41,7 @@ interface ProfileContentProps {
     userType: string;
 }
 
-const ProfileContent = ({
+const ProfileContentDelete = ({
     audio,
     images,
     videos,
@@ -52,6 +53,32 @@ const ProfileContent = ({
     handleToggleVideos,
     userType
 }: ProfileContentProps) => {
+  
+
+  function toggleDelete(id: number) {
+    const element = document.getElementById(id.toString());
+    element.classList.toggle("hidden");
+    element.classList.toggle("delete-me");
+  }
+
+  function deleteSelected() {
+    const deleteThese = document.getElementsByClassName("delete-me");
+    let formData = new FormData;
+    for (let x of deleteThese) {
+      if (x.classList.contains('video')) {
+        //append to videoList[]
+        formData.append('videoList[]', x.id);
+      } else if (x.classList.contains('image')) {
+        //append to imageList[]
+        formData.append('imageList[]', x.id);
+      } else if (x.classList.contains('music')) {
+        //append to musicList[]
+        formData.append('musicList[]', x.id);
+      }
+    }
+    deleteItems(formData);
+  }
+
     return (
         <div className="m-4 rounded col-start-2 col-span-3 flex flex-col">
             {userType === "creative" ? 
@@ -88,28 +115,37 @@ const ProfileContent = ({
 
             <div className="flex-grow rounded grid grid-cols-4 grid-rows-3 gap-4 p-4">
                 {audioEnabled ? audio.map((track) => 
-                    <div key={track.id} className="col-span-1 row-span-1 flex justify-center items-center bg-gray-800 rounded-lg">
+                    <div key={track.id} onClick={() => toggleDelete(track.id)} className="col-span-1 row-span-1 flex justify-center items-center bg-gray-800 rounded-lg relative">
+                        <div id={track.id.toString()} className="music size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
                         <AudioPlayer 
                             imageUrl={track.image_url}
-                            title={track.title}
                             caption={track.caption}
+                            title={track.title}
                             src={track.url}
                         />
                     </div>
                 ) : <div></div>}
 
                 {imagesEnabled ? images.map((image) => 
-                    <div key={image.id}>
+                    <div key={image.id} onClick={() => toggleDelete(image.id)} className="relative">
+                        <div id={image.id.toString()} className="image size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
                         <ProfileContentImage src={image.url} caption={image.caption} />
                     </div>
                 ) : <div></div>}
 
                 {videosEnabled ? videos.map((video) => 
-                    <VideoPlayer key={video.id} title={video.title} caption={video.caption} src={video.url} />) : <div></div>
+                    <div key={video.id} onClick={() => toggleDelete(video.id)} className="relative">
+                      <div id={video.id.toString()} className="video size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
+                      <VideoPlayer title={video.title} caption={video.caption} src={video.url} /> 
+                    </div>
+                )  : <div></div>
                 }
             </div>
+            <form action={deleteSelected} >
+              <button className="fixed bottom-10 right-10 bg-blue-700 rounded-full p-3"> DELETE ALL SELECTED </button>
+            </form>
         </div>
     );
 };
 
-export default ProfileContent;
+export default ProfileContentDelete;
