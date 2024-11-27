@@ -10,7 +10,7 @@ const tus = require('tus-js-client');
 const projectId = '';
 
 export default function CreateItem() {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState("");
   const [progVis, setProgVis] = useState(false);
 
   async function uploadThing(formData: FormData) {
@@ -44,12 +44,12 @@ export default function CreateItem() {
     redirect('/dashboard');
   }
 
-  async function uploadFile(bucketName, fileName, file, fileType) {
+  async function uploadFile(bucketName: string, fileName: string, file: File, fileType: string) {
       setProgVis(true);
-      setProgress(0);
+      setProgress("0");
       const { data: { session } } = await supabase.auth.getSession()
   
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
           var upload = new tus.Upload(file, {
               endpoint: `https://skhxtmjbcfmytgqgdayj.supabase.co/storage/v1/upload/resumable`,
               retryDelays: [0, 3000, 5000, 10000, 20000],
@@ -66,11 +66,11 @@ export default function CreateItem() {
                   cacheControl: 3600,
               },
               chunkSize: 6 * 1024 * 1024, // NOTE: it must be set to 6MB (for now) do not change it
-              onError: function (error) {
+              onError: function (error: any) {
                   console.log('Failed because: ' + error)
                   reject(error)
               },
-              onProgress: function (bytesUploaded, bytesTotal) {
+              onProgress: function (bytesUploaded: number, bytesTotal: number) {
                   var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
                   console.log(bytesUploaded, bytesTotal, percentage + '%')
                   setProgress(percentage);
@@ -83,7 +83,7 @@ export default function CreateItem() {
   
   
           // Check if there are any previous uploads to continue.
-          return upload.findPreviousUploads().then(function (previousUploads) {
+          return upload.findPreviousUploads().then(function (previousUploads: any) {
               // Found previous uploads so we select the first one.
               if (previousUploads.length) {
                   upload.resumeFromPreviousUpload(previousUploads[0])

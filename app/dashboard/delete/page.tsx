@@ -21,6 +21,7 @@ interface Audio {
   url: string;
   artwork_id: number;
   id: number;
+  caption: string;
   image_url: string;
 }
 
@@ -36,6 +37,7 @@ interface Video {
   url: string;
   email: string;
   title: string;
+  caption: string;
   id: number;
 }
 

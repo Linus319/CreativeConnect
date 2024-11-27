@@ -9,6 +9,7 @@ import { PlayIcon, PauseIcon } from "lucide-react";
 interface Track {
     imageUrl: string;
     title: string;
+    caption: string;
     src: string;
 }
 

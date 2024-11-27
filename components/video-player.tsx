@@ -1,5 +1,6 @@
 interface VideoProps {
     title: string;
+    caption: string;
     src: string;
 }
 

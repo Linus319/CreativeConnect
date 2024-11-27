@@ -1,13 +1,14 @@
 import AudioPlayer from './audio-player';
 import ProfileContentImage from './profile-content-image';
 import VideoPlayer from './video-player';
-import { deleteItems } from '/lib/actions';
+import { deleteItems } from '../lib/actions';
 
 interface Audio {
     title: string;
     url: string;
     artwork_id: number;
     id: number;
+    caption: string;
     image_url: string;
 }
 
@@ -23,6 +24,7 @@ interface Video {
     url: string;
     email: string;
     title: string;
+    caption: string;
     id: number;
 }
 
@@ -53,8 +55,8 @@ const ProfileContentDelete = ({
 }: ProfileContentProps) => {
   
 
-  function toggleDelete(id) {
-    const element = document.getElementById(id);
+  function toggleDelete(id: number) {
+    const element = document.getElementById(id.toString());
     element.classList.toggle("hidden");
     element.classList.toggle("delete-me");
   }
@@ -114,11 +116,11 @@ const ProfileContentDelete = ({
             <div className="flex-grow rounded grid grid-cols-4 grid-rows-3 gap-4 p-4">
                 {audioEnabled ? audio.map((track) => 
                     <div key={track.id} onClick={() => toggleDelete(track.id)} className="col-span-1 row-span-1 flex justify-center items-center bg-gray-800 rounded-lg relative">
-                        <div id={track.id} className="music size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
+                        <div id={track.id.toString()} className="music size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
                         <AudioPlayer 
                             imageUrl={track.image_url}
-                            title={track.title}
                             caption={track.caption}
+                            title={track.title}
                             src={track.url}
                         />
                     </div>
@@ -126,14 +128,14 @@ const ProfileContentDelete = ({
 
                 {imagesEnabled ? images.map((image) => 
                     <div key={image.id} onClick={() => toggleDelete(image.id)} className="relative">
-                        <div id={image.id} className="image size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
+                        <div id={image.id.toString()} className="image size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
                         <ProfileContentImage src={image.url} caption={image.caption} />
                     </div>
                 ) : <div></div>}
 
                 {videosEnabled ? videos.map((video) => 
                     <div key={video.id} onClick={() => toggleDelete(video.id)} className="relative">
-                      <div id={video.id} className="video size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
+                      <div id={video.id.toString()} className="video size-6 bg-green-700 hidden absolute -left-3 -top-3 z-10 rounded-full"></div>
                       <VideoPlayer title={video.title} caption={video.caption} src={video.url} /> 
                     </div>
                 )  : <div></div>
