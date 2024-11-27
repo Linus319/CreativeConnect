@@ -1,12 +1,17 @@
 'use client';
 
+import { createClient } from '@supabase/supabase-js';
 import { deleteItem } from '@/lib/actions';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface MessageProps {
   currentUser: boolean;
   message: string;
 }
+
+const SUPABASE_URL = 'https://skhxtmjbcfmytgqgdayj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNraHh0bWpiY2ZteXRncWdkYXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyODc4ODksImV4cCI6MjA0NDg2Mzg4OX0.xtiyeanOVkSUYC5id8qG3eo3pJA3icrCSQA5yGUpbew';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function DeleteButton({ id }: { id: string}) {
 
@@ -17,7 +22,6 @@ function DeleteButton({ id }: { id: string}) {
       <button type="submit" className="flex items-center justify-center absolute -right-3 -top-3 bg-gray-700 rounded-full size-8">X</button>
     </form> 
   );
-
 }
 
 export function Images({ deleteMode }: { deleteMode: string } ) {
@@ -39,13 +43,13 @@ export function Images({ deleteMode }: { deleteMode: string } ) {
 
 
 	const imageList = images?.map(img => 
-                                 <div key={img.id} className="flex-auto relative">
-                                  <a href={img.url}>
-                                    <img src={img.url} className="rounded-lg"/>
-                                  </a>
-                                  {deleteMode == "true" ? 
-                                  <DeleteButton id={img.id}/> : null }
-                                </div>);
+    <div key={img.id} className="flex-auto relative">
+    <a href={img.url}>
+      <img src={img.url} className="rounded-lg"/>
+    </a>
+    {deleteMode == "true" ? 
+    <DeleteButton id={img.id}/> : null }
+  </div>);
 
   return (loading 
           ? 
@@ -75,27 +79,27 @@ export function Notifications({ selectChat }: { selectChat: any }) {
   const image = "https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png"
 
   const usersList = notif?.map((user, k) => {
-  
-                                return user.profile_image == null ? 
-                                        <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
-                                          <img src={image} className="rounded-full max-w-10"/>
-                                          <div className="flex justify-center" > {user.display_name} </div>
-                                        </div>
-                                        :  
-                                        <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
-                                          <img src={user.profile_image} className="rounded-full max-w-10"/>
-                                          <div className="flex justify-center" > {user.display_name} </div>
-                                        </div>
-  }
-                                      );
+
+    return user.profile_image == null ? 
+      <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
+        <img src={image} className="rounded-full max-w-10"/>
+        <div className="flex justify-center" > {user.display_name} </div>
+      </div>
+      :  
+      <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
+        <img src={user.profile_image} className="rounded-full max-w-10"/>
+        <div className="flex justify-center" > {user.display_name} </div>
+      </div>
+    }
+        );
 
   return (loading
-          ?
-          <div>Loading...</div>
-          :
-          <div className="flex flex-row m-5 gap-4">
-            {usersList}
-          </div>
+    ?
+    <div>Loading...</div>
+    :
+    <div className="flex flex-row m-5 gap-4">
+      {usersList}
+    </div>
   );
 }
 
@@ -117,16 +121,16 @@ export function Connections() {
 
   const usersList = cons?.map((user, k) => {
   
-                                return user.profile_image == null ? 
-                                        <div className="flex-auto" key={k}>
-                                          <img src={image} className="rounded-full max-w-10"/>
-                                          <div className="flex justify-center" > {user.display_name} </div>
-                                        </div>
-                                        :  
-                                        <div className="flex-auto" key={k}>
-                                          <img src={user.profile_image} className="rounded-full max-w-10"/>
-                                          <div className="flex justify-center" > {user.display_name} </div>
-                                        </div>
+    return user.profile_image == null ? 
+      <div className="flex-auto" key={k}>
+        <img src={image} className="rounded-full max-w-10"/>
+        <div className="flex justify-center" > {user.display_name} </div>
+      </div>
+      :  
+      <div className="flex-auto" key={k}>
+        <img src={user.profile_image} className="rounded-full max-w-10"/>
+        <div className="flex justify-center" > {user.display_name} </div>
+      </div>
   });
 
 
@@ -140,16 +144,51 @@ export function Connections() {
   );
 }
 
+
+
 export function Chat({ target }: {target: string}) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vis, setVis] = useState("visible");
+  const [currentUser, setCurrentUser] = useState('none');
+  const messageRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLFormElement>(null);
+  const channelName = target.localeCompare(currentUser) ? target.split('@')[0] + currentUser.split('@')[0] : currentUser.split('@')[0] + target.split('@')[0];
 
+  const myChannel = supabase.channel(channelName, {
+    config: {
+      broadcast: { self: true },
+    },
+  })
+  
+  myChannel.subscribe((status) => {
+    if (status !== 'SUBSCRIBED') { return }
+    
+  })
+
+  myChannel.on(
+    'broadcast',
+    { event: 'test-my-messages' },
+    (payload) => {
+      const newPush = messages;
+      newPush.push(payload['payload'][0]);
+      setMessages([...newPush]);
+    }
+  )
+
+  function scrollBottom() {
+    messageRef.current?.scrollIntoView()
+  }
 
   useEffect(() => {
     setLoading(true);
     const formData = new FormData();
     formData.append("target", target);
+    fetch('/api/get-current-user', { method: 'POST' } )
+    .then((res) => res.json())
+    .then((data) => {
+      setCurrentUser(data.email);
+    })
     fetch('/api/get-msg', { body: formData, method: 'POST'})
     .then((res) => res.json())
     .then((data) => { 
@@ -158,11 +197,21 @@ export function Chat({ target }: {target: string}) {
     })
   }, [target])
 
+  useEffect(() => {
+    scrollBottom();
+  }, [messages]);
+
   function sendMsg(formData: FormData) {
     formData.append('target', target);
     fetch('/api/send-msg', { body: formData, method: 'POST'})
-    .then((res) => { 
-      console.log(res.status);
+    .then((res) => res.json())
+    .then((data) => { 
+      console.log("sending message to channel: ", myChannel['topic']);
+      myChannel.send({
+        type: 'broadcast',
+        event: 'test-my-messages',
+        payload : data
+      })
     })
   }
 
@@ -185,18 +234,25 @@ export function Chat({ target }: {target: string}) {
       {loading ? 
         <div className="self-center">Loading...</div>
        : 
-      <div className="overflow-y-auto ">
+      <div className="overflow-y-auto" id="content">
        {messages.map(msg => {
-          return msg.sender === 'abel@abel.com' ? 
+          return msg.sender === currentUser ? 
             <SingleMessage currentUser={true} message={msg.message} key={msg.id}/>
            : 
             <SingleMessage currentUser={false} message={msg.message} key={msg.id}/>
           
         })}
+        <div ref={messageRef} />
       </div>
       }
       
-      <form action={sendMsg} className="self-center">
+      <form 
+        ref={inputRef} 
+        action={ async (formData) => { 
+          await sendMsg(formData) 
+          inputRef.current?.reset() 
+        }}  
+          className="self-center">
         <input name="msg" type="text" className="rounded-md px-2"/>
         <button type="submit" className="px-1 m-1 bg-green-700 rounded-full">Send</button>
       </form>

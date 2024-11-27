@@ -91,7 +91,7 @@ export default function Dashboard() {
       ) : (
         <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
           <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
-            <div className="flex flex-col bg-rose-600 h-5/6 rounded-3xl">
+            <div className="flex flex-col bg-rose-600 h-full rounded-3xl">
               {user && (
                 <ProfileContent
                   audio={audio}
@@ -107,16 +107,11 @@ export default function Dashboard() {
                 />
               )}
             </div>
-            <div className="flex items-center bg-sky-600 h-1/6 rounded-3xl overflow-x-auto">
-              <div className="overflow-y-auto mx-4">
-                <Notifications selectChat={selectChat} />
-              </div>
-            </div>
           </div>
 
           <div className="flex justify-center flex-col max-w-screen-md basis-5/12 bg-zinc-600">
             <div className="bg-violet-600 h-1/2 rounded-3xl">
-              <Connections />
+              <Notifications selectChat={selectChat} />
             </div>
             <div className="bg-emerald-600 h-1/2 rounded-3xl">Calendar</div>
           </div>
