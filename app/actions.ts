@@ -22,7 +22,7 @@ export async function updateProfileDetails(formData: FormData, email: string) {
     sub_types: subTypes
   }).eq('email', email);
 
-  redirect(`/profile`);
+  redirect("/profile");
 }
 
 export const signUpAction = async (formData: FormData) => {
@@ -33,7 +33,6 @@ export const signUpAction = async (formData: FormData) => {
   const subTypes = formData.get("sub-types");
 
   const supabase = createClient();
-  const origin = headers().get("origin");
 
   if (!email || !password || !displayName || !userType || !subTypes) {
     return { error: "All fields are required" };
@@ -41,17 +40,13 @@ export const signUpAction = async (formData: FormData) => {
 
   const { error } = await supabase.auth.signUp({
     email,
-    password,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-    },
+    password,    
   });
 
   if (error) {
-    console.error(error.code + " " + error.message);
     return encodedRedirect("error", "/sign-up", error.message);
-  } else {
-
+  }
+  else {
     const { error } = await supabase.from('users').insert({
       email: email, 
       display_name: displayName,
@@ -60,14 +55,13 @@ export const signUpAction = async (formData: FormData) => {
     });
 
     if (error) {
-      console.error(error.code + " " + error.message);
       return encodedRedirect("error", "/sign-up", error.message);
     }
 
     return encodedRedirect(
       "success",
-      "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
+      "/dashboard",
+      "Account created successfully",
     );
   }
 
@@ -162,7 +156,19 @@ export const resetPasswordAction = async (formData: FormData) => {
 };
 
 export const signOutAction = async () => {
-  const supabase = createClient();
-  await supabase.auth.signOut();
-  return redirect("/sign-in");
+
+  try {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    return redirect("/");
+  }
+  catch (err) {
+    encodedRedirect(
+      "error",
+      '/sign-out',
+      "Sign out failed, try again",
+    );
+  };
+  
 };
+
