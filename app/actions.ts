@@ -14,16 +14,19 @@ export async function updateProfileDetails(formData: FormData, email: string) {
 
   const supabase = createClient();
 
-  await supabase.from("users").update({
-    bio: bio,
-    city: city,
-    state: state,
-    display_name: displayName,
-    sub_types: subTypes
-  }).eq('email', email);
+  try { await supabase.from("users").update({ 
+    bio: bio, 
+    city: city, 
+    state: state, 
+    display_name: displayName, 
+    sub_types: subTypes, 
+  }).eq('email', email); 
 
-  redirect("/profile");
-}
+  redirect("/profile"); }
+  catch (error) { 
+    console.error("Profile update failed:", error); 
+  }
+} 
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -81,7 +84,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/dashboard");
+  redirect("/dashboard");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -155,10 +158,11 @@ export const resetPasswordAction = async (formData: FormData) => {
   encodedRedirect("success", "/protected/reset-password", "Password updated");
 };
 
-export async function signOutAction() {
+  export async function signOutAction() {
   const supabase = createClient();
   await supabase.auth.signOut();
   cookies().delete('sb-access-token');
   cookies().delete('sb-refresh-token');
   redirect('/sign-in');
 }
+
