@@ -14,16 +14,19 @@ export async function updateProfileDetails(formData: FormData, email: string) {
 
   const supabase = createClient();
 
-  await supabase.from("users").update({
-    bio: bio,
-    city: city,
-    state: state,
-    display_name: displayName,
-    sub_types: subTypes
-  }).eq('email', email);
+  try { await supabase.from("users").update({ 
+    bio: bio, 
+    city: city, 
+    state: state, 
+    display_name: displayName, 
+    sub_types: subTypes, 
+  }).eq('email', email); 
 
-  redirect("/profile");
-}
+  redirect("/profile"); }
+  catch (error) { 
+    console.error("Profile update failed:", error); 
+  }
+} 
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -81,7 +84,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/dashboard");
+  redirect("/dashboard");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -156,11 +159,10 @@ export const resetPasswordAction = async (formData: FormData) => {
 };
 
 export const signOutAction = async () => {
+  const supabase = createClient();
 
   try {
-    const supabase = createClient();
     await supabase.auth.signOut();
-    return redirect("/");
   }
   catch (err) {
     encodedRedirect(
@@ -168,7 +170,8 @@ export const signOutAction = async () => {
       '/sign-out',
       "Sign out failed, try again",
     );
-  };
-  
+  } finally {
+    redirect("/");
+  }
 };
 
