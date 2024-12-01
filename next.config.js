@@ -12,7 +12,7 @@ const nextConfig = {
     },
     // experimental: {
     //     serverActions: {
-    //       allowedOrigins: ["studious-carnival-v6vqjvq69qghp67r.github.dev", "localhost:3000"]
+    //       allowedOrigins: ["supreme-space-waffle-r4gp5gp45xrcwpv6.github.dev", "localhost:3000"]
     //     }
     // },
 };

@@ -2,7 +2,7 @@
 
 import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function updateProfileDetails(formData: FormData, email: string) {
@@ -155,20 +155,10 @@ export const resetPasswordAction = async (formData: FormData) => {
   encodedRedirect("success", "/protected/reset-password", "Password updated");
 };
 
-export const signOutAction = async () => {
-
-  try {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    return redirect("/");
-  }
-  catch (err) {
-    encodedRedirect(
-      "error",
-      '/sign-out',
-      "Sign out failed, try again",
-    );
-  };
-  
-};
-
+export async function signOutAction() {
+  const supabase = createClient();
+  await supabase.auth.signOut();
+  cookies().delete('sb-access-token');
+  cookies().delete('sb-refresh-token');
+  redirect('/sign-in');
+}
