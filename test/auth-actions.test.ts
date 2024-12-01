@@ -1,4 +1,4 @@
-import { signOutAction, signUpAction, updateProfileDetails } from "../app/actions";
+import { signOutAction, signInAction, signUpAction, updateProfileDetails } from "../app/actions";
 import { createClient } from "@/utils/supabase/server";
 import { encodedRedirect } from "../utils/utils";
 import { headers } from "next/headers";
@@ -19,6 +19,10 @@ jest.mock("next/headers", () => ({
 jest.mock("next/navigation", () => ({
   redirect: jest.fn(),
 }));
+
+jest.mock('../app/actions'), () => ({
+  signOutAction: jest.fn(),
+})
 
 const dummySubTypes = ["Music", "Video"];
 
@@ -54,7 +58,6 @@ describe("signUpAction", () => {
     expect(mockSupabase.auth.signUp).toHaveBeenCalledWith({
       email: "test@example.com",
       password: "password123",
-      // options: { emailRedirectTo: "http://localhost:3000/auth/callback" },
     });
 
     expect(mockSupabase.from).toHaveBeenCalledWith("users");
@@ -78,7 +81,7 @@ describe("signUpAction", () => {
         signUp: jest.fn().mockResolvedValue({ user: null, error: { code: "ERROR", message: "Test error" } }),
       },
       from: jest.fn().mockReturnThis(),
-      insert: jest.fn().mockResolvedValue({ data: [] }),  // Insert should not be called if signUp fails
+      insert: jest.fn().mockResolvedValue({ data: [] }), 
     };
 
     (createClient as jest.Mock).mockReturnValue(mockSupabase);
@@ -116,11 +119,11 @@ describe("signUpAction", () => {
 
 describe("updateProfileDetails", () => {
     it("should update user profile and redirect to /profile", async () => {
-        const mockSupabase = {
-            from: jest.fn().mockReturnThis(),
-            update: jest.fn().mockReturnThis(),
-            eq: jest.fn().mockReturnThis(),
-        };
+      const mockSupabase = {
+        from: jest.fn().mockReturnThis(),
+        update: jest.fn().mockReturnThis(),
+        eq: jest.fn().mockReturnThis(),
+      };
 
     (createClient as jest.Mock).mockReturnValue(mockSupabase);
 
@@ -155,11 +158,13 @@ describe("signOutAction", () => {
 
   it("should sign out the user and redirect to '/' ", async () => {
     const signOutMock = jest.fn();
-    (createClient as jest.Mock).mockReturnValue({
-      auth: {
-        signOut: signOutMock,
-      },
-    });
+    const mockSupabase = { 
+      auth: { 
+        signOut: signOutMock, 
+      }, 
+    };
+
+    (createClient as jest.Mock).mockReturnValue(mockSupabase);
 
     await signOutAction();
 
@@ -183,6 +188,59 @@ describe("signOutAction", () => {
       "error",
       '/sign-out',
       "Sign out failed, try again",
+    );
+  });
+});
+
+describe("signInAction", () => {
+  it("should sign in user and redirect to '/dashboard' ", async () => {
+    const signInMock = jest.fn().mockResolvedValue({ error: null });
+    (createClient as jest.Mock).mockReturnValue({
+      auth: {
+        signInWithPassword: signInMock,
+      },
+    });
+
+    const formData = new FormData();
+    formData.append("email", "test@example.com");
+    formData.append("password", "securepzwrd");
+
+
+    await signInAction(formData);
+
+    expect(signInMock).toHaveBeenCalledTimes(1);
+    expect(signInMock).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'securepzwrd',
+    });
+    expect(redirect).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("should handle errors upon sign-in and redirect to /sign-in with error message", async () => {
+    const signInMock = jest.fn().mockResolvedValue({
+      error: { message: 'Invalid credentials' },
+    });
+    (createClient as jest.Mock).mockReturnValue({
+      auth: {
+        signInWithPassword: signInMock,
+      },
+    });
+
+    const formData = new FormData();
+    formData.append("email", "test@example.com");
+    formData.append("password", "securepzwrd");
+
+    await signInAction(formData);
+
+    expect(signInMock).toHaveBeenCalledTimes(1);
+    expect(signInMock).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'securepzwrd',
+    });
+    expect(encodedRedirect).toHaveBeenCalledWith( 
+      'error', 
+      '/sign-in', 
+      'Invalid credentials' 
     );
   });
 });

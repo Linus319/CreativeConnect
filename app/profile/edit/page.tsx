@@ -82,6 +82,7 @@ export default function EditProfilePage() {
                 <div className="bg-gray-500 mt-4 mx-4 rounded flex justify-between items-center">
                     <Label className="m-4" htmlFor='display-name'>Display name</Label>
                     <Input 
+                        required
                         className="m-4 bg-gray-700"
                         name="display-name" 
                         value={displayName} 
