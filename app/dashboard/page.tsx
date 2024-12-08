@@ -52,6 +52,7 @@ export default function Dashboard() {
   const [imagesEnabled, setImagesEnabled] = useState<boolean>(true);
   const [videosEnabled, setVideosEnabled] = useState<boolean>(true);
   const [sendTo, setSendTo] = useState('none');
+  const [startHidden, setStartHidden] = useState("hidden");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -85,6 +86,7 @@ export default function Dashboard() {
 
   function selectChat(e: React.ChangeEvent<any>) {
     setSendTo(e.currentTarget.attributes.id.value);
+    setStartHidden("visible");
   }
 
   return (
@@ -125,7 +127,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="fixed bottom-0 right-0">
+      <div className={`fixed bottom-0 right-0 ${startHidden}`}>
         <Chat target={sendTo} />
       </div>
     </>
