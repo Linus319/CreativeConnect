@@ -1,4 +1,4 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
+<!-- <a href="https://demo-nextjs-with-supabase.vercel.app/">
   <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
   <h1 align="center">Next.js and Supabase Starter Kit</h1>
 </a>
@@ -93,4 +93,10 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 
 - [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs) -->
+
+<h1 align="center">Creative Connect</h1>
+
+<p>Welcome to Creative Connect, where creators of all varieties can share content, connect with others, and even schedule events and appointements with venues of all types.</p>
+
+<a href="https://creativeconnect.onrender.com/">Check out our demo!<p>
