@@ -5,6 +5,7 @@ import ProfileContent from '@/components/profile-content';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {Calendar} from "@nextui-org/calendar";
 
 interface User {
   email: string;
@@ -94,12 +95,12 @@ export default function Dashboard() {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
-          <div className="flex justify-center flex-col max-w-screen-md basis-7/12 bg-stone-600">
-            <div className="flex flex-col bg-rose-600 h-full rounded-3xl">
+        <div className="flex flex-row p-2 bg-gray-700 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl rounded-xl">
+          <div className="flex justify-center flex-col max-w-screen-md basis-7/12">
+            <div className="flex flex-col h-full rounded-3xl">
               <div className="flex justify-between m-3">
-              <Link href="/dashboard/create" className="bg-blue-500 rounded-full p-2">Add stuff</Link>
-              <Link href="/dashboard/delete" className="bg-blue-500 rounded-full p-2">Del stuff</Link>
+              <Link href="/dashboard/create" className="bg-purple-500 rounded-full p-2">Add stuff</Link>
+              <Link href="/dashboard/delete" className="bg-purple-500 rounded-full p-2">Del stuff</Link>
               </div>
               {user && (
                 <ProfileContent
@@ -118,11 +119,20 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex justify-center flex-col max-w-screen-md basis-5/12 bg-zinc-600">
-            <div className="bg-violet-600 h-1/2 rounded-3xl">
+          <div className="flex justify-center flex-col max-w-screen-md basis-5/12 bg-gray-600 rounded-xl">
+            <div className="h-1/3 rounded-3xl">
+              <h1 className="text-2xl m-4 text-center">Connections</h1>
               <Notifications selectChat={selectChat} />
             </div>
-            <div className="bg-emerald-600 h-1/2 rounded-3xl">Calendar</div>
+              <div className="h-2/3 rounded-3xl flex flex-col items-center justify-center">
+                <h1 className="text-2xl m-4">Calendar</h1>
+                <div className="flex-grow">
+                  <Calendar
+                    aria-label="Date (No Selection)"
+                    className="w-full"
+                  />
+                </div>
+              </div>
           </div>
         </div>
       )}
