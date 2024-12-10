@@ -1,6 +1,6 @@
 "use client"
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ export default function EditProfilePage() {
     const [state, setState] = useState<string>("");
     const [displayName, setDisplayName] = useState<string>("");
 
+    const router = useRouter();
     const searchParams = useSearchParams();
     const email = searchParams.get('email');
 
@@ -66,6 +67,8 @@ export default function EditProfilePage() {
         }
 
         await updateProfileDetails(formData, email);
+
+        router.push('/profile');
     };
 
     if (loading) {
