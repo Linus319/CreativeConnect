@@ -37,7 +37,7 @@ export default function ProfileContentImage({ src, caption }: ImageProps) {
                 height={300}         
                 objectFit="cover"    
             />
-            <div className="caption-text mt-2 text-center text-sm text-gray-600">{caption}</div>
+            <div className="caption-text mt-2 text-center text-sm text-white">{caption}</div>
             {imageOpen && (
                 <div className="p-20 fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
                     <div className="relative w-full h-full max-w-4xl max-h-4xl">
