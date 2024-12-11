@@ -1,25 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { selectUsers } from '@/lib/actions';
+import Link from 'next/link';
 
 export default function FindCreatives() {
   const [userList, setUserList] = useState(<></>);
   const [userPreview, setUserPreview] = useState(<></>);
   const [listLoading, setListLoading] = useState(true);
-  const [userLoading, setUserLoading] = useState(true);
 
   //renders on first pass list of all users
   useEffect(() => {
     setListLoading(true);
-    setUserLoading(true);
     fetch('/api/user-list', { body: new FormData(), method: 'POST'})
     .then((res) => res.json())
     .then((data) => { setUserList(UserList(data, setUserPreview)) })
 
     setUserPreview(UserProfile(undefined));
     setListLoading(false);
-    setUserLoading(false);
   }, []);
 
   //makes a fetch request with the filters applied
@@ -157,20 +154,24 @@ function UserProfile(user: any) {
 
   if (user === undefined) return <div>No user selected</div>;
 
-  return user[0].profile_image == null ? ( 
-    <div className="flex flex-col">
-      <h1> {user[0].display_name} </h1>
-      <img className="size-40 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
-      <div> {user[0].bio} </div>
-      <div> {user[0].sub_types} </div>
-    </div>
+  return user[0].profile_image == null ? (
+    <Link href={`/profile?email=${user[0].email}`}>
+      <div className="flex flex-col">
+        <h1> {user[0].display_name} </h1>
+        <img className="size-40 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
+        <div> {user[0].bio} </div>
+        <div> {user[0].sub_types} </div>
+      </div>
+    </Link> 
   )
   : (
-    <div className="flex flex-col">
-      <h1> {user[0].display_name} </h1>
-      <img className="size-40 rounded-full" src={user[0].profile_image} />
-      <div> {user[0].bio} </div>
-      <div> {user[0].sub_types} </div>
-    </div>
+    <Link href={`/profile?email=${user[0].email}`}>
+      <div className="flex flex-col">
+        <h1> {user[0].display_name} </h1>
+        <img className="size-40 rounded-full" src={user[0].profile_image} />
+        <div> {user[0].bio} </div>
+        <div> {user[0].sub_types} </div>
+      </div>
+    </Link>
   );
 }
