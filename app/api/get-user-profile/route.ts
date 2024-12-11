@@ -25,11 +25,24 @@ interface AudioWithImage extends AudioTrack {
     image_url: string;
 }
 
+interface User {
+    email: string;
+    display_name: string;
+    profile_image: string;
+    bio: string;
+    sub_types: string[];
+    city: string;
+    state: string;
+    user_type: string;
+}
+
 export async function POST(request: Request) {
     const supabase = createClient();
     
     const formData = await request.formData();
     const email = formData.get("email");
+
+    const { data: userData }: {data: User} = await supabase.from("users").select('*').eq('email', email).single();
 
     // get audio data from audio table for this user and add album art from images table
     const { data: audio }: { data: AudioTrack[] } = await supabase.from("audio").select().eq('email', email);
@@ -52,5 +65,5 @@ export async function POST(request: Request) {
 
     const { data: videos }: { data: Video[] } = await supabase.from("video").select().eq('email', email);
 
-    return Response.json({ audio: audioWithImages, images: images, videos: videos });
+    return Response.json({ audio: audioWithImages, images: images, videos: videos, user: userData });
 }
