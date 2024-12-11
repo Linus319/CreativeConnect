@@ -21,25 +21,19 @@ export default function EditProfilePage() {
     const [city, setCity] = useState<string | null>(null);
     const [state, setState] = useState<string>("");
     const [displayName, setDisplayName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const email = searchParams.get('email');
 
     useEffect(() => {
-        if (!email) {
-            setError("No email address.");
-            setLoading(false);
-            return;
-        }
-
         const fetchUserData = () => {
             let formData = new FormData(); 
             formData.append("email", email as string);
-            fetch('/api/user-get', {body: formData, method: 'POST'} ).then((res) => 
+            fetch('/api/get-current-user', {method: 'POST'} ).then((res) => 
                 res.json()
             ).then((data) => {
-                const user_info = data[0];
+                const user_info = data;
                 setUserInfo(user_info);
                 setSubTypes(user_info.sub_types || []);
                 setUserType(user_info.user_type);
@@ -47,9 +41,9 @@ export default function EditProfilePage() {
                 setCity(user_info.city);
                 setState(user_info.state);
                 setDisplayName(user_info.display_name);
+                setEmail(user_info.email);
                 setLoading(false);
             });
-    
         };
 
         fetchUserData();

@@ -6,21 +6,32 @@ import { selectUsers } from '@/lib/actions';
 export default function FindCreatives() {
   const [userList, setUserList] = useState(<></>);
   const [userPreview, setUserPreview] = useState(<></>);
+  const [listLoading, setListLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(true);
 
   //renders on first pass list of all users
   useEffect(() => {
+    setListLoading(true);
+    setUserLoading(true);
     fetch('/api/user-list', { body: new FormData(), method: 'POST'})
     .then((res) => res.json())
     .then((data) => { setUserList(UserList(data, setUserPreview)) })
 
     setUserPreview(UserProfile(undefined));
+    setListLoading(false);
+    setUserLoading(false);
   }, []);
 
   //makes a fetch request with the filters applied
   function getUsers(formData: FormData) {
+    setListLoading(true);
     fetch('/api/user-list', { body: formData, method: 'POST'} )
     .then((res) => res.json())
-    .then((data) => { setUserList(UserList(data, setUserPreview)) })
+    .then((data) => { 
+      setUserList(UserList(data, setUserPreview));
+      setListLoading(false);
+     })
+    
   }
 
   return (
@@ -48,13 +59,17 @@ export default function FindCreatives() {
             Reload
           </button>
         </form>
-        <div className="overflow-y-auto">
-        {userList}
+        {listLoading ? (
+        <div className="flex basis-full justify-center items-center">Loading...</div>
+          ) : (
+            <div className="overflow-y-auto">
+              {userList}
+            </div>
+        )}
         </div>
-      </div>
-
+      
       <div className="flex bg-red-900 max-w-screen-md basis-1/2 justify-center items-center">
-        {userPreview}
+          {userPreview}
       </div>
     </div>
   );
@@ -63,33 +78,35 @@ export default function FindCreatives() {
 function UserList(users: any, setUserPreview: any) {
 
   function getOne(e: any) {
-
+    setUserPreview("Loading...");
     let formData = new FormData();
     formData.append("email", e.currentTarget.id);
     fetch('/api/user-get', { body:formData , method: 'POST'} )
     .then((res) => res.json())
-    .then((data) => { setUserPreview(UserProfile(data)) })
+    .then((data) => { 
+      setUserPreview(UserProfile(data));
+     })
 
   }
   
   const list = users.data.map((pf: any) => {
-                              return pf.profile_image == null ?
-                                <button onClick={getOne} key={pf.email} id={pf.email}className="flex flex-row">
-                                  <img className="size-20 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
-                                  <div className="flex flex-col">
-                                    <p>{pf.display_name}</p>
-                                    {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
-                                  </div>
-                                </button>
-                                :
+    return pf.profile_image == null ?
+      <button onClick={getOne} key={pf.email} id={pf.email}className="flex flex-row">
+        <img className="size-20 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
+        <div className="flex flex-col">
+          <p>{pf.display_name}</p>
+          {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
+        </div>
+      </button>
+      :
 
-                                <button onClick={getOne} key={pf.email} id={pf.email} className="flex flex-row">
-                                  <img className="size-20 m-3 rounded-full" src={pf.profile_image} />
-                                  <div className="flex flex-col">
-                                    <p>{pf.display_name}</p>
-                                    {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
-                                  </div>
-                                </button>
+      <button onClick={getOne} key={pf.email} id={pf.email} className="flex flex-row">
+        <img className="size-20 m-3 rounded-full" src={pf.profile_image} />
+        <div className="flex flex-col">
+          <p>{pf.display_name}</p>
+          {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
+        </div>
+      </button>
 
   });
 
