@@ -177,7 +177,7 @@ export default function ProfilePage() {
                             handleToggleAudio={handleToggleAudio}
                             handleToggleImages={handleToggleImages}
                             handleToggleVideos={handleToggleVideos}
-                            userType={user.user_type}
+                            userType={profile.user_type}
                         />
                     )}
                 </div>
