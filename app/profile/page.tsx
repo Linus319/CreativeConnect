@@ -43,11 +43,11 @@ interface Video {
     id: number;
 }
 
-export default function ProfilePage() {
+export default function ProfilePage(profileUser: any) {
     const [audio, setAudio] = useState<Audio[]>([]);
     const [images, setImages] = useState<Image[]>([]);
     const [videos, setVideos] = useState<Video[]>([]);
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(profileUser);
     const [loading, setLoading] = useState<boolean>(true);
     const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
     const [imagesEnabled, setImagesEnabled] = useState<boolean>(true);

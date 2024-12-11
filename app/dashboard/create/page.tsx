@@ -1,8 +1,6 @@
 'use client';
 import { Supabase } from '@/lib/supa';
-import { uploadImage } from '@/lib/actions';
 import { useState, useEffect } from 'react';
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 const supabase = Supabase();

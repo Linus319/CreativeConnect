@@ -35,7 +35,7 @@ export default function RootLayout({
                   <div className="flex flex-row justify-evenly w-1/3">
                     <Link href="/browse/venues">Venues</Link>
                   </div>
-                <div className="flex items-center absolute -right-36">
+                <div className="flex items-center absolute -right-5">
                   <HeaderAuth />
                 </div>
                 </div>
