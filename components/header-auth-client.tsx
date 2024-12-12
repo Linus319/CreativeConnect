@@ -23,7 +23,10 @@ export default function UserMenu() {
   }
 // (make server action? so supabase isn't summoned on client component here)
   return (<div className="relative z-50" onMouseEnter={toggleMenu} onMouseLeave={toggleMenu}>
-            <img className="size-10" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
+            <img 
+              className="rounded-full size-10 border-2" 
+              src={image ? image : "https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" }
+            />
             {showMenu ? 
               <div className="flex flex-col absolute -bottom-30 right-0 bg-gray-500 rounded-md divide-y divide-gray-300">
                 <Link href="/dashboard" className="p-2">Dashboard</Link>

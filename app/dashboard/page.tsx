@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {Calendar} from "@nextui-org/calendar";
+import { CloudUpload, Trash2 } from 'lucide-react';
 
 interface User {
   email: string;
@@ -101,8 +102,12 @@ export default function Dashboard() {
           <div className="flex justify-center flex-col max-w-screen-md basis-7/12">
             <div className="flex flex-col h-full rounded-3xl">
               <div className="flex justify-between m-3">
-              <Link href="/dashboard/create" className="bg-purple-500 rounded-full p-2">Add stuff</Link>
-              <Link href="/dashboard/delete" className="bg-purple-500 rounded-full p-2">Del stuff</Link>
+              <Link href="/dashboard/create" className="bg-purple-500 rounded-full p-2 hover:bg-purple-700">
+                <CloudUpload />
+              </Link>
+              <Link href="/dashboard/delete" className="bg-purple-500 rounded-full p-2 hover:bg-purple-700">
+                <Trash2 />
+              </Link>
               </div>
               {user && (
                 <ProfileContent
