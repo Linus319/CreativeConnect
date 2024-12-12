@@ -127,18 +127,30 @@ function UserList(users: any, setUserPreview: any) {
     return pf.profile_image == null ?
       <button onClick={getOne} key={pf.email} id={pf.email}className="flex flex-row">
         <img className="size-20 m-3 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
-        <div className="flex flex-col">
-          <p>{pf.display_name}</p>
-          {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
+        <div className="flex flex-col m-4">
+          <p className="text-2xl text-left">{pf.display_name}</p>
+          <div className="flex flex-row space-x-2">
+            {pf.sub_types?.map((entry: any, index: any) => (
+              <span key={index} className="text-sm text-white">
+                {entry}
+              </span>
+            ))}
+          </div>
         </div>
       </button>
       :
 
       <button onClick={getOne} key={pf.email} id={pf.email} className="flex flex-row">
         <img className="size-20 m-3 rounded-full" src={pf.profile_image} />
-        <div className="flex flex-col">
-          <p>{pf.display_name}</p>
-          {pf.sub_types?.map((entry: any, index: any) => <p key={index}>{entry}</p>)}
+        <div className="flex flex-col m-4">
+          <p className="text-2xl text-left">{pf.display_name}</p>
+          <div className="flex flex-row space-x-2">
+            {pf.sub_types?.map((entry: any, index: any) => (
+              <span key={index} className="text-sm text-white">
+                {entry}
+              </span>
+            ))}
+          </div>
         </div>
       </button>
 
@@ -156,21 +168,29 @@ function UserProfile(user: any) {
 
   return user[0].profile_image == null ? (
     <Link href={`/profile?email=${user[0].email}`}>
-      <div className="flex flex-col">
-        <h1> {user[0].display_name} </h1>
+      <div className="flex flex-col justify-content items-center">
+        <h1 className="text-4xl m-4"> {user[0].display_name} </h1>
         <img className="size-40 rounded-full" src="https://www.seekpng.com/png/detail/365-3651600_default-portrait-image-generic-profile.png" />
-        <div> {user[0].bio} </div>
-        <div> {user[0].sub_types} </div>
+        <div className="m-4"> {user[0].bio} </div>
+        <div className="flex flex-wrap gap-2">
+            {user[0].sub_types.map((type: string) =>
+                <div key={type} className="m-4 bg-purple-500 text-white py-1 px-3 rounded-full text-sm font-medium">{type}</div>
+            )}
+        </div>
       </div>
     </Link> 
   )
   : (
     <Link href={`/profile?email=${user[0].email}`}>
-      <div className="flex flex-col">
-        <h1> {user[0].display_name} </h1>
+      <div className="flex flex-col justify-content items-center">
+        <h1 className="text-4xl m-4"> {user[0].display_name} </h1>
         <img className="size-40 rounded-full" src={user[0].profile_image} />
-        <div> {user[0].bio} </div>
-        <div> {user[0].sub_types} </div>
+        <div className="m-4"> {user[0].bio} </div>
+        <div className="flex flex-wrap gap-2">
+            {user[0].sub_types.map((type: string) =>
+                <div key={type} className="m-4 bg-purple-500 text-white py-1 px-3 rounded-full text-sm font-medium">{type}</div>
+            )}
+        </div>
       </div>
     </Link>
   );
