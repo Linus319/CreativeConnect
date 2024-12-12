@@ -79,7 +79,7 @@ export function Notifications({ selectChat }: { selectChat: any }) {
   const usersList = notif?.map((user, k) => {
 
     return user.profile_image == null ? 
-      <div className="flex-auto" key={k} onClick={selectChat} id={user.email}>
+      <div className="flex-auto" key={k} onClick={selectChat} id={user.email} data-name={user.display_name}>
         <img src={image} className="rounded-full max-w-10"/>
         <div className="flex justify-center" > {user.display_name} </div>
       </div>
@@ -144,7 +144,7 @@ export function Connections() {
 
 
 
-export function Chat({ target }: {target: string}) {
+export function Chat({ target, na }: {target: string, na: string}) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vis, setVis] = useState("visible");
@@ -223,16 +223,20 @@ export function Chat({ target }: {target: string}) {
 
   return ( 
     <div>
-    <button onClick={toggleVisible} className="bg-green-900 rounded-full size-10">
-    💬
-    </button>
-      {target}
-    <div className={`flex flex-col justify-between size-96 bg-gray-700 ${vis}`}>
+      <div className="flex justify-between items-center">
+        <button onClick={toggleVisible} className="bg-gray-900 rounded-full size-10">
+        💬
+        </button>
+        {vis == "visible" ? `${na}` : "" }
+      </div>
+
+    <div className={`flex flex-col justify-between size-96 bg-gray-700 rounded-xl ${vis}`}>
+      
 
       {loading ? 
         <div className="self-center">Loading...</div>
        : 
-      <div className="overflow-y-auto" id="content">
+      <div className="overflow-y-auto border-4 border-b-indigo-500" id="content">
        {messages.map(msg => {
           return msg.sender === currentUser ? 
             <SingleMessage currentUser={true} message={msg.message} key={msg.id}/>
@@ -251,7 +255,7 @@ export function Chat({ target }: {target: string}) {
           inputRef.current?.reset() 
         }}  
           className="self-center">
-        <input name="msg" type="text" className="rounded-md px-2"/>
+        <input name="msg" type="text" className="rounded-md px-2 mx-2"/>
         <button type="submit" className="px-1 m-1 bg-green-700 rounded-full">Send</button>
       </form>
     </div>
@@ -263,8 +267,8 @@ export function Chat({ target }: {target: string}) {
 
 const SingleMessage = ( {currentUser, message}: MessageProps) => {
   return (
-    <div className={`flex flex-row m-3 ${currentUser && 'justify-end'}`}>
-      <div className="rounded-full bg-blue-700 p-2 max-w-80">{message}</div>
+    <div className={`flex flex-row m-3 ${currentUser && 'justify-end' }`}>
+      <div className={`rounded-xl ${currentUser ? "bg-purple-700" : "bg-blue-700"} p-2 max-w-80`}>{message}</div>
     </div>
   );
 }

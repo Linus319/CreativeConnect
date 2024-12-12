@@ -56,6 +56,7 @@ export default function ProfilePage() {
     const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
     const [imagesEnabled, setImagesEnabled] = useState<boolean>(true);
     const [videosEnabled, setVideosEnabled] = useState<boolean>(true);
+    const [toggleChat, setToggleChat] = useState("visible");
 
 
     useEffect(() => {
@@ -116,6 +117,14 @@ export default function ProfilePage() {
     const handleToggleImages = () => setImagesEnabled(!imagesEnabled);
     const handleToggleVideos = () => setVideosEnabled(!videosEnabled);
 
+    function toggleVisible() {
+        if (toggleChat === 'visible') {
+          setToggleChat("hidden");
+        } else {
+          setToggleChat("visible");
+        }
+      }
+
     return (
         <>
             {loading ? <div>Loading...</div> : (
@@ -133,6 +142,7 @@ export default function ProfilePage() {
                                     className="object-cover w-full h-full"
                                 />
                             </div>
+                            
                         </div>
 
                         {profile.city || profile.state ? 
@@ -161,9 +171,10 @@ export default function ProfilePage() {
                                 </div> 
                             </> : <div></div>}
 
-                        <div className="flex justify-center">
-                          <Chat target="ding@dong.com" />
-                        </div>
+                        {email ? (<div className="flex justify-center">
+                            <button onClick={toggleVisible} className="bg-gray-700 p-3 rounded-xl">Message</button>
+                        </div>): null }
+                        
                     </div>
 
                     {user && (
@@ -182,6 +193,12 @@ export default function ProfilePage() {
                     )}
                 </div>
             )}
+            {email ? (
+                <div className={`fixed bottom-0 right-0 z-50 p-3 bg-gray-800 rounded-xl ${toggleChat}`}>
+                    <Chat target={email} />   
+                </div>) 
+                : null}
+            
         </>
     );
 }
