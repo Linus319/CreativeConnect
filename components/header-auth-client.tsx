@@ -8,6 +8,15 @@ import { signOutAction } from '../app/actions';
 export default function UserMenu() {
 
   const [showMenu, setShowMenu] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/get-profile-pic', { body: new FormData(), method: 'POST'})
+    .then((res) => res.json())
+    .then((data) => { 
+      setImage(data);
+    });
+  }, []);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -29,5 +38,6 @@ export default function UserMenu() {
               :
               <></>}
           </div>);
+
 
 }
