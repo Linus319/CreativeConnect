@@ -87,9 +87,7 @@ export default function Dashboard() {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className="flex flex-row p-2 bg-gray-400 w-5/6 justify-center space-x-10 h-full max-w-screen-2xl">
-          <div className="flex justify-center flex-col bg-stone-600 min-w-full">
-            <div className="flex flex-col bg-rose-600 h-full rounded-3xl">
+            <div className="flex flex-col bg-gray-700 h-full w-full max-w-screen-2xl rounded-3xl">
               {user && (
                 <ProfileContentDelete
                   audio={audio}
@@ -104,8 +102,6 @@ export default function Dashboard() {
                   userType={user.user_type}
                 />
               )}
-            </div>
-          </div>
         </div>
       )}
     </>

@@ -94,14 +94,18 @@ export default function CreateItem() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-gray-700 h-72 p-5 rounded-xl">
       <form action={uploadThing}>
-        <div className="flex flex-col">
-          <label>Choose file</label>
-          <input name="file" type="file" accept="image/*, audio/mpeg, video/*," required/>
-          <label>Caption</label>
-          <input name="caption" type="text" required/>
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Submit</button>
+        <div className="flex flex-col h-full space-y-4">
+          <div className="flex flex-col bg-gray-600 p-3 rounded-xl">
+            <label>Choose file:</label>
+            <input name="file" type="file" accept="image/*, audio/mpeg, video/*," required/>
+          </div>
+          <div className="flex flex-col bg-gray-600 h-full space-y-2 p-3 rounded-xl">
+            <label>Caption:</label>
+            <input name="caption" type="text" required/>
+          </div>
+          <button type="submit" className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Submit</button>
         </div>
         
       </form>
