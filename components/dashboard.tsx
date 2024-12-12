@@ -151,7 +151,9 @@ export function Chat({ target, na }: {target: string, na: string}) {
   const [currentUser, setCurrentUser] = useState('none');
   const messageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLFormElement>(null);
-  const channelName = target.localeCompare(currentUser) ? target.split('@')[0] + currentUser.split('@')[0] : currentUser.split('@')[0] + target.split('@')[0];
+  const names = [target, currentUser];
+  names.sort((a, b) => a.localeCompare(b));
+  const channelName = names.join('');
 
   const myChannel = supabase.channel(channelName, {
     config: {
